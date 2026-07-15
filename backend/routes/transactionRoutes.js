@@ -1,10 +1,21 @@
 import express from 'express';
 import prisma from '../prismaClient.js';
 import { requireAuth } from '../middleware/authMiddleware.js';
+import { processRecurringTransactions } from '../services/recurringEngine.js';
 
 const router = express.Router();
 
 router.use(requireAuth);
+
+// POST /api/transactions/process-recurring
+router.post('/process-recurring', async (req, res) => {
+  try {
+    const result = await processRecurringTransactions(req.user.id);
+    return res.status(200).json({ message: 'Recurring transactions processed', ...result });
+  } catch (error) {
+    return res.status(500).json({ error: 'Failed to process recurring transactions.' });
+  }
+});
 
 // Helper to calculate next recurring date
 const calculateNextRecurringDate = (date, interval) => {

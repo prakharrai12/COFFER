@@ -1,6 +1,7 @@
 import express from 'express';
 import prisma from '../prismaClient.js';
 import { requireAuth } from '../middleware/authMiddleware.js';
+import { processRecurringTransactions } from '../services/recurringEngine.js';
 
 const router = express.Router();
 
@@ -17,6 +18,9 @@ const getMonthBounds = (monthStr) => {
 router.get('/dashboard', async (req, res) => {
   try {
     const { start, end, monthStr } = getMonthBounds(req.query.month);
+
+    // Auto-process due recurring transactions for returning user
+    await processRecurringTransactions(req.user.id);
 
     // Run parallel queries to guarantee sub-3s response time
     const [monthTx, accounts, budgets, recentTx, categories] = await Promise.all([
