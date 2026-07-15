@@ -21,10 +21,12 @@ app.get('/api/health', (req, res) => {
 import authRoutes from './routes/authRoutes.js';
 import accountRoutes from './routes/accountRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
+import transactionRoutes from './routes/transactionRoutes.js';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/accounts', accountRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/transactions', transactionRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {
