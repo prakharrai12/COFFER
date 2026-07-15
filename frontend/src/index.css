@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=general-sans@300,400,500,600,700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: #10140F;
+  --ink-muted: #5B6158;
+  --canvas: #F6F4EE;
+  --surface: #FFFFFF;
+  --surface-raised: #FBFAF6;
+  --border: #E4E1D6;
+  --brand: #1F5F4D;
+  --accent: #B8863B;
+  --positive: #2E8B57;
+  --negative: #B0452F;
+  --warning: #C08A2E;
+
+  --ease-coffer-in: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-coffer-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-coffer-snap: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --dur-micro: 120ms;
+  --dur-standard: 220ms;
+  --dur-emphasis: 360ms;
+  --dur-hero: 600ms;
+}
+
+.dark {
+  --ink: #EDEBE3;
+  --ink-muted: #9A9E93;
+  --canvas: #0E1210;
+  --surface: #161B17;
+  --surface-raised: #1D231E;
+  --border: #262D26;
+  --brand: #3FA37F;
+  --accent: #D3A55C;
+  --positive: #4CC38A;
+  --negative: #E27158;
+  --warning: #DDA94B;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-canvas text-ink font-sans antialiased selection:bg-brand selection:text-white;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+/* Tabular numbers for all monetary figures and mono text */
+.tabular-nums,
+.font-mono,
+[data-tabular] {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Custom scrollbar matching restrained brand feel */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-muted);
+}
+
+/* Reduced motion overrides for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
