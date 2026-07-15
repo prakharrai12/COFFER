@@ -18,9 +18,9 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', service: 'COFFER API Server', timestamp: new Date().toISOString() });
 });
 
-// Route mount placeholders (will be imported and mounted sequentially)
-// import authRoutes from './routes/authRoutes.js';
-// app.use('/api/auth', authRoutes);
+import authRoutes from './routes/authRoutes.js';
+
+app.use('/api/auth', authRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {
