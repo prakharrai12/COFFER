@@ -22,11 +22,15 @@ import authRoutes from './routes/authRoutes.js';
 import accountRoutes from './routes/accountRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import transactionRoutes from './routes/transactionRoutes.js';
+import budgetRoutes from './routes/budgetRoutes.js';
+import analyticsRoutes from './routes/analyticsRoutes.js';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/accounts', accountRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/transactions', transactionRoutes);
+app.use('/api/budgets', budgetRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {
