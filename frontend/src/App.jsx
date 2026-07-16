@@ -5,6 +5,7 @@ import Login from './pages/auth/Login.jsx';
 import Register from './pages/auth/Register.jsx';
 import ForgotPassword from './pages/auth/ForgotPassword.jsx';
 import ResetPassword from './pages/auth/ResetPassword.jsx';
+import Dashboard from './pages/Dashboard.jsx';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -43,12 +44,18 @@ function AppRoutes() {
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/*"
         element={
           <ProtectedRoute>
-            <div className="min-h-screen bg-canvas text-ink p-8">
-              <h1 className="font-fraunces text-2xl font-medium">Dashboard / App Layout (Coming in Commit 13)</h1>
-            </div>
+            <Dashboard />
           </ProtectedRoute>
         }
       />
@@ -67,3 +74,4 @@ function App() {
 }
 
 export default App;
+
