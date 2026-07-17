@@ -29,6 +29,18 @@ const Register = () => {
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState('');
 
+  const handleAutofillSample = () => {
+    const randomNum = Math.floor(100 + Math.random() * 900);
+    setFormData({
+      displayName: `Elena Rostova • Portfolio ${randomNum}`,
+      email: `elena.${randomNum}@coffer.app`,
+      password: 'password123',
+      currency: '$ USD',
+    });
+    setErrors({});
+    setServerError('');
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -121,12 +133,31 @@ const Register = () => {
             </span>
           </div>
 
-          <div className="mb-8">
+          <div className="mb-6">
             <h2 className="font-fraunces text-3xl font-medium tracking-tight text-ink mb-2">
               Create your ledger
             </h2>
             <p className="text-sm text-ink-muted font-sans">
               Enter your credentials to set up your personal workspace.
+            </p>
+          </div>
+
+          {/* Quick Autofill Test Box */}
+          <div className="mb-6 p-4 rounded-xl bg-brand/5 border border-brand/20 shadow-sm">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-mono font-bold text-brand uppercase tracking-wider flex items-center gap-1.5">
+                <span>⚡</span> Quick Sample Registration
+              </span>
+              <button
+                type="button"
+                onClick={handleAutofillSample}
+                className="text-xs font-sans font-medium text-ink-muted hover:text-brand underline underline-offset-2 transition-colors"
+              >
+                Autofill test profile
+              </button>
+            </div>
+            <p className="text-xs text-ink-muted leading-relaxed">
+              Instantly generate realistic credentials (`elena.***@coffer.app`) to test initial account setup and category customization.
             </p>
           </div>
 
