@@ -195,11 +195,40 @@ const Transactions = () => {
           <div className="flex items-end">
             <button
               onClick={handleResetFilters}
-              className="w-full py-1.5 px-2 text-[11px] font-mono uppercase rounded border border-border bg-surface hover:bg-canvas text-ink-muted hover:text-ink transition-colors duration-150 text-center"
+              className="w-full py-1.5 px-2 text-[11px] font-mono uppercase rounded border border-border bg-surface hover:bg-canvas text-ink-muted hover:text-ink transition-colors duration-150 text-center min-h-[38px]"
             >
               Clear Filters ↺
             </button>
           </div>
+        </div>
+
+        {/* Quick Audit Shortcut Chips */}
+        <div className="pt-2 flex flex-wrap items-center gap-2 text-xs font-sans">
+          <span className="text-[10px] font-mono text-ink-muted uppercase mr-1">Quick Filters:</span>
+          <button
+            onClick={() => setFilters((prev) => ({ ...prev, search: '', type: 'ALL', accountId: 'ALL', categoryId: 'ALL' }))}
+            className={`px-2.5 py-1 rounded-full text-[11px] border transition-colors ${!filters.search && filters.type === 'ALL' && filters.categoryId === 'ALL' ? 'bg-brand text-white border-brand font-medium' : 'bg-canvas border-border text-ink-muted hover:text-ink'}`}
+          >
+            All Ledger
+          </button>
+          <button
+            onClick={() => setFilters((prev) => ({ ...prev, search: 'Market', type: 'EXPENSE' }))}
+            className={`px-2.5 py-1 rounded-full text-[11px] border transition-colors ${filters.search === 'Market' ? 'bg-brand text-white border-brand font-medium' : 'bg-canvas border-border text-ink-muted hover:text-ink'}`}
+          >
+            🛒 Groceries & Dining
+          </button>
+          <button
+            onClick={() => setFilters((prev) => ({ ...prev, search: 'Payroll', type: 'INCOME' }))}
+            className={`px-2.5 py-1 rounded-full text-[11px] border transition-colors ${filters.search === 'Payroll' ? 'bg-brand text-white border-brand font-medium' : 'bg-canvas border-border text-ink-muted hover:text-ink'}`}
+          >
+            💰 Salary Inflow
+          </button>
+          <button
+            onClick={() => setFilters((prev) => ({ ...prev, search: 'Lease', type: 'EXPENSE' }))}
+            className={`px-2.5 py-1 rounded-full text-[11px] border transition-colors ${filters.search === 'Lease' ? 'bg-brand text-white border-brand font-medium' : 'bg-canvas border-border text-ink-muted hover:text-ink'}`}
+          >
+            🏠 Housing & HOA
+          </button>
         </div>
 
         {/* Date Range Sub-row */}
