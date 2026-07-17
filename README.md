@@ -17,6 +17,20 @@ COFFER’s interface rejects the noisy, hyper-saturated trends of modern SaaS to
 
 ---
 
+## ⚡ Instant Demo Treasury Credentials & Auto-Login
+
+Experience the full **COFFER Vault** immediately upon launching without manually setting up accounts or typing credentials:
+
+| Mode | Demo Email | Demo Password | Pre-Seeded Financial Portfolio | Quick Action Trigger |
+| :--- | :--- | :--- | :--- | :--- |
+| **⚡ Vault Owner (Alex Mercer)** | `demo@coffer.app` | `password123` | • **$22,069.50 Net Worth**<br>• `Main Checking Vault` ($4,250.00)<br>• `High-Yield Reserve` ($18,500.00)<br>• `Obsidian Platinum Card` (-$680.50)<br>• **10+ Categorized Cashflows** (Salary, Whole Foods, Tesla, Penthouse Rent, Equinox)<br>• **3 Monthly Budgets** with telemetry | Click **"🚀 Sign in instantly as Demo User (Alex Mercer)"** directly on the Login screen (`http://localhost:5173/login`) or click **"Autofill credentials"** |
+| **✨ Sample Registration Profile** | `elena.***@coffer.app` | `password123` | • Generates clean registration profile (`Elena Rostova • Portfolio 842`) | Click **"⚡ Autofill test profile"** on the Register screen (`http://localhost:5173/register`) |
+
+> [!TIP]
+> **Live Reseed Banner**: When signed in as `demo@coffer.app`, a gold banner (`⚡ Demo Treasury Mode Active`) appears at the top of the **Financial Command Center** (`/`). Click **"↻ Reset Demo Ledger Data"** anytime to instantly reset and reseed your demo accounts and transactions back to pristine initial figures!
+
+---
+
 ## What is COFFER?
 
 **COFFER** is a production-grade, end-to-end personal finance and budget tracker designed to eliminate spreadsheet friction without sacrificing visual precision or data density. Unlike cartoonish budgeting apps or generic AI-generated dashboards, COFFER adheres to a restrained, high-contrast typographic hierarchy (*Fraunces*, *General Sans*, and *JetBrains Mono* tabular figures) and a curated color system (`#F7F5F0` warm paper canvas, `#141614` deep charcoal ink, `#1F5F4D` vault green) tailored for surgical financial clarity.
