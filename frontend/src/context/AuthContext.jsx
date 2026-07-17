@@ -73,6 +73,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const demoLogin = async () => {
+    setError(null);
+    try {
+      const res = await api.post('/auth/demo-login', {});
+      api.setAccessToken(res.accessToken);
+      setUser(res.user);
+      return res;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    }
+  };
+
   const logout = async () => {
     try {
       await api.post('/auth/logout', {});
@@ -92,6 +105,7 @@ export const AuthProvider = ({ children }) => {
         error,
         login,
         register,
+        demoLogin,
         logout,
         setUser,
       }}
