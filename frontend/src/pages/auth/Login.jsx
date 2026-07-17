@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import FloatingInput from '../../components/common/FloatingInput.jsx';
 
 const Login = () => {
-  const { login } = useAuth();
+  const { login, demoLogin } = useAuth();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -15,6 +15,29 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState('');
+
+  const handleDemoLogin = async () => {
+    setSubmitting(true);
+    setServerError('');
+    try {
+      if (demoLogin) {
+        await demoLogin();
+      } else {
+        await login('demo@coffer.app', 'password123');
+      }
+      navigate('/');
+    } catch (err) {
+      setServerError(err.message || 'Failed to enter demo treasury.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleAutofillDemo = () => {
+    setFormData({ email: 'demo@coffer.app', password: 'password123' });
+    setErrors({});
+    setServerError('');
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -98,13 +121,40 @@ const Login = () => {
             </span>
           </div>
 
-          <div className="mb-8">
+          <div className="mb-6">
             <h2 className="font-fraunces text-3xl font-medium tracking-tight text-ink mb-2">
               Sign in to Coffer
             </h2>
             <p className="text-sm text-ink-muted font-sans">
               Enter your email and password to access your accounts.
             </p>
+          </div>
+
+          {/* Quick Sign In Demo User Box */}
+          <div className="mb-6 p-4 rounded-xl bg-brand/5 border border-brand/20 shadow-sm">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-mono font-bold text-brand uppercase tracking-wider flex items-center gap-1.5">
+                <span>⚡</span> Quick Demo Access
+              </span>
+              <button
+                type="button"
+                onClick={handleAutofillDemo}
+                className="text-xs font-sans font-medium text-ink-muted hover:text-brand underline underline-offset-2 transition-colors"
+              >
+                Autofill credentials
+              </button>
+            </div>
+            <p className="text-xs text-ink-muted mb-3 leading-relaxed">
+              Experience the full personal finance tracker with pre-seeded accounts (`$22,069.50 Net Worth`), budgets, and 10+ categorized transactions.
+            </p>
+            <button
+              type="button"
+              onClick={handleDemoLogin}
+              disabled={submitting}
+              className="w-full bg-surface hover:bg-brand/10 text-brand border border-brand/30 font-medium py-2.5 px-4 rounded-lg text-xs font-sans transition-all duration-200 flex items-center justify-center gap-2 shadow-sm min-h-[44px]"
+            >
+              <span>🚀 Sign in instantly as Demo User (Alex Mercer)</span>
+            </button>
           </div>
 
           {serverError && (
