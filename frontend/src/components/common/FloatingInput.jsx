@@ -20,12 +20,12 @@ const FloatingInput = ({
   return (
     <div className={`relative mb-4 ${className}`}>
       <div
-        className={`relative rounded-lg border transition-all duration-200 bg-surface px-3 pt-5 pb-2 ${
+        className={`relative rounded-lg border transition-all duration-200 bg-surface px-3.5 pt-5 pb-2 min-h-[52px] flex flex-col justify-end ${
           error
             ? 'border-negative focus-within:ring-2 focus-within:ring-negative/20'
             : isFocused
-            ? 'border-brand ring-2 ring-brand/15'
-            : 'border-border hover:border-ink-muted'
+            ? 'border-brand ring-2 ring-brand/15 shadow-sm'
+            : 'border-border hover:border-ink-muted/80'
         }`}
       >
         <label
