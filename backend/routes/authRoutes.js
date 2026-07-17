@@ -144,9 +144,22 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ error: 'Email and password are required.' });
     }
 
-    const user = await prisma.user.findUnique({
+    let user = await prisma.user.findUnique({
       where: { email: email.toLowerCase().trim() },
     });
+
+    if (!user && email.toLowerCase().trim() === 'demo@coffer.app') {
+      const passwordHash = await bcrypt.hash('password123', 10);
+      user = await prisma.user.create({
+        data: {
+          email: 'demo@coffer.app',
+          passwordHash,
+          displayName: 'Alex Mercer • Demo Treasury',
+          currency: '$ USD',
+        },
+      });
+      await seedDemoUserData(user.id);
+    }
 
     if (!user) {
       return res.status(401).json({ error: 'Invalid email or password.' });
@@ -172,6 +185,131 @@ router.post('/login', async (req, res) => {
   } catch (error) {
     console.error('Login Error:', error);
     return res.status(500).json({ error: 'Internal server error during login.' });
+  }
+// Seed rich demo user data (accounts, transactions, and budgets)
+const seedDemoUserData = async (userId) => {
+  await seedDefaultCategories(userId);
+
+  const categories = await prisma.category.findMany({ where: { userId } });
+  const catMap = {};
+  categories.forEach((c) => {
+    catMap[c.name] = c.id;
+  });
+
+  // 1. Create Accounts
+  const checking = await prisma.account.create({
+    data: {
+      userId,
+      name: 'Main Checking Vault',
+      type: 'CHECKING',
+      initialBalance: 4250.00,
+      currency: '$ USD',
+    },
+  });
+
+  const savings = await prisma.account.create({
+    data: {
+      userId,
+      name: 'High-Yield Reserve',
+      type: 'SAVINGS',
+      initialBalance: 18500.00,
+      currency: '$ USD',
+    },
+  });
+
+  const creditCard = await prisma.account.create({
+    data: {
+      userId,
+      name: 'Obsidian Platinum Card',
+      type: 'CREDIT_CARD',
+      initialBalance: -680.50,
+      currency: '$ USD',
+    },
+  });
+
+  // 2. Create Realistic Transactions across current month
+  const now = new Date();
+  const getDay = (daysAgo) => new Date(now.getFullYear(), now.getMonth(), Math.max(1, now.getDate() - daysAgo));
+
+  const demoTransactions = [
+    { amount: 5400.00, type: 'INCOME', note: 'Bi-Weekly Executive Payroll Deposit', date: getDay(1), accountId: checking.id, categoryId: catMap['Income'] },
+    { amount: 120.45, type: 'EXPENSE', note: 'Whole Foods Market Artisanal Groceries', date: getDay(2), accountId: checking.id, categoryId: catMap['Food & Dining'] },
+    { amount: 2200.00, type: 'EXPENSE', note: 'Penthouse Loft Monthly Lease & HOA', date: getDay(3), accountId: checking.id, categoryId: catMap['Rent & Housing'] },
+    { amount: 45.00, type: 'EXPENSE', note: 'Tesla Supercharger Fast Charge Station', date: getDay(4), accountId: creditCard.id, categoryId: catMap['Transport'] },
+    { amount: 185.00, type: 'EXPENSE', note: 'Symmetrical Fiber Optic 2Gbps Internet', date: getDay(6), accountId: checking.id, categoryId: catMap['Utilities'] },
+    { amount: 22.99, type: 'EXPENSE', note: 'Criterion Channel & Ultra HD Streaming', date: getDay(7), accountId: creditCard.id, categoryId: catMap['Entertainment'] },
+    { amount: 340.00, type: 'EXPENSE', note: 'Apple Flagship Store Peripheral Upgrade', date: getDay(8), accountId: creditCard.id, categoryId: catMap['Shopping'] },
+    { amount: 85.00, type: 'EXPENSE', note: 'Equinox Wellness & Sauna Recovery Pass', date: getDay(9), accountId: checking.id, categoryId: catMap['Health'] },
+    { amount: 750.00, type: 'INCOME', note: 'Stripe SaaS Quarterly Dividend Distribution', date: getDay(12), accountId: savings.id, categoryId: catMap['Income'] },
+    { amount: 68.30, type: 'EXPENSE', note: 'Omakase Sushi Bistro Dinner Table', date: getDay(14), accountId: creditCard.id, categoryId: catMap['Food & Dining'] },
+  ];
+
+  for (const tx of demoTransactions) {
+    if (tx.categoryId && tx.accountId) {
+      await prisma.transaction.create({
+        data: {
+          userId,
+          amount: tx.amount,
+          type: tx.type,
+          note: tx.note,
+          date: tx.date,
+          accountId: tx.accountId,
+          categoryId: tx.categoryId,
+        },
+      });
+    }
+  }
+
+  // 3. Create Budgets
+  if (catMap['Food & Dining']) {
+    await prisma.budget.create({ data: { userId, categoryId: catMap['Food & Dining'], amountLimit: 600.00 } });
+  }
+  if (catMap['Shopping']) {
+    await prisma.budget.create({ data: { userId, categoryId: catMap['Shopping'], amountLimit: 400.00 } });
+  }
+  if (catMap['Entertainment']) {
+    await prisma.budget.create({ data: { userId, categoryId: catMap['Entertainment'], amountLimit: 200.00 } });
+  }
+};
+
+// POST /api/auth/demo-login
+router.post('/demo-login', async (req, res) => {
+  try {
+    const demoEmail = 'demo@coffer.app';
+    const demoPassword = 'password123';
+
+    let user = await prisma.user.findUnique({
+      where: { email: demoEmail },
+    });
+
+    if (!user) {
+      const passwordHash = await bcrypt.hash(demoPassword, 10);
+      user = await prisma.user.create({
+        data: {
+          email: demoEmail,
+          passwordHash,
+          displayName: 'Alex Mercer • Demo Treasury',
+          currency: '$ USD',
+        },
+      });
+      await seedDemoUserData(user.id);
+    }
+
+    const { accessToken } = await generateTokensAndCookie(user, res);
+
+    return res.status(200).json({
+      message: 'Demo login successful',
+      accessToken,
+      user: {
+        id: user.id,
+        email: user.email,
+        displayName: user.displayName,
+        currency: user.currency,
+      },
+    });
+  } catch (error) {
+    console.error('Demo Login Error:', error);
+    return res.status(500).json({ error: 'Internal server error during demo login.' });
   }
 });
 
