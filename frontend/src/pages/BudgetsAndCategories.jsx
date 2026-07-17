@@ -239,11 +239,19 @@ const BudgetsAndCategories = () => {
                       </div>
 
                       {hasBudget && (
-                        <div className="h-2.5 w-full rounded-full bg-canvas border border-border/60 overflow-hidden shadow-2xs">
-                          <div
-                            className={`h-full rounded-full transition-all duration-500 ease-out ${barBg}`}
-                            style={{ width: `${percentClamped}%` }}
-                          />
+                        <div className="space-y-1.5 pt-1">
+                          <div className="h-2.5 w-full rounded-full bg-canvas border border-border/60 overflow-hidden shadow-2xs" title={`${b.percentage}% consumed • $${Math.max(0, b.monthlyLimit - b.spent).toFixed(2)} remaining`}>
+                            <div
+                              className={`h-full rounded-full transition-all duration-500 ease-out ${barBg}`}
+                              style={{ width: `${percentClamped}%` }}
+                            />
+                          </div>
+                          <div className="flex justify-between items-center text-[11px] font-mono text-ink-muted">
+                            <span>REMAINING ALLOCATION:</span>
+                            <span className={b.monthlyLimit - b.spent < 0 ? 'text-negative font-bold' : 'text-positive font-medium'}>
+                              {b.monthlyLimit - b.spent < 0 ? `-$${Math.abs(b.monthlyLimit - b.spent).toFixed(2)} OVER` : `+$${(b.monthlyLimit - b.spent).toFixed(2)} LEFT`}
+                            </span>
+                          </div>
                         </div>
                       )}
                     </div>
