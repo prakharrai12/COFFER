@@ -48,10 +48,55 @@ const Dashboard = () => {
     fetchDashboard(currentMonth);
   }, [currentMonth]);
 
+  const [reseeing, setReseeding] = useState(false);
+
+  const handleReseedDemo = async () => {
+    setReseeding(true);
+    try {
+      await api.post('/auth/demo-login', {});
+      await fetchDashboard(currentMonth);
+    } catch (err) {
+      console.error('Reseed error:', err);
+    } finally {
+      setReseeding(false);
+    }
+  };
+
   const currency = user?.currency || '$ USD';
 
   return (
     <AppLayout>
+      {/* Demo Treasury Mode Banner */}
+      {user?.email === 'demo@coffer.app' && (
+        <div className="mb-6 p-4 rounded-xl bg-brand/10 border border-brand/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm">
+          <div className="flex items-center gap-3">
+            <span className="w-8 h-8 rounded-lg bg-brand text-white flex items-center justify-center font-mono font-bold text-sm shrink-0">
+              ⚡
+            </span>
+            <div>
+              <p className="text-xs font-mono font-bold text-brand uppercase tracking-wider">
+                Demo Treasury Mode Active • Alex Mercer
+              </p>
+              <p className="text-xs text-ink-muted leading-relaxed">
+                You are inspecting live pre-seeded financial accounts, categories, and monthly cashflows.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={handleReseedDemo}
+            disabled={reseeing}
+            className="bg-surface hover:bg-brand/10 text-brand border border-brand/30 px-3.5 py-2 rounded-lg text-xs font-sans font-medium transition-all duration-200 shrink-0 flex items-center gap-1.5 shadow-sm min-h-[38px]"
+          >
+            {reseeing ? (
+              <span>Reseeding Vault...</span>
+            ) : (
+              <span>↻ Reset Demo Ledger Data</span>
+            )}
+          </button>
+        </div>
+      )}
+
       {/* Top Header & Month Filter */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
