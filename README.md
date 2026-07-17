@@ -4,6 +4,19 @@
 
 ---
 
+## Visual Design & Architecture Preview
+
+![COFFER Vault — Precision Command Center Login & Dashboard](./assets/coffer_login_preview.png)
+
+### The COFFER Vault Aesthetic (`#141614` Deep Charcoal × `#F7F5F0` Warm Paper × `#1F5F4D` Vault Green)
+COFFER’s interface rejects the noisy, hyper-saturated trends of modern SaaS tools in favor of **timeless Swiss editorial restraint** and **high-density banking precision**:
+- **Split-Screen Command Portal**: The authentication and entry flow divides the canvas into two distinct realms — the deep charcoal (`#141614`) **Treasury Command Center** on the left showcasing live net worth metrics and sub-3 second aggregation precision, balanced against the crisp, warm paper (`#F7F5F0`) **Ledger Authentication Panel** on the right.
+- **Curated Typographic Hierarchy**: Editorial headers rendered in *Fraunces* provide commanding authority ("Return to your financial command center."), paired with high-contrast *General Sans* body copy and *JetBrains Mono* tabular numerals (`.tabular-nums`) ensuring every financial figure aligns cleanly down to the cent without jitter.
+- **Surgical Touch & Button Targets**: Form fields and primary action triggers (`Access Ledger`) feature generous `14px 24px` touch targets (`min-height: 48px`) with smooth focus transitions (`#1F5F4D` Vault Green borders), eliminating cramped inputs and misaligned labels across all viewport widths.
+- **Secure & Transparent Sessions**: Built from day one for real single-user ledger tracking (`COFFER v1.0 • LOCAL DEV • SECURE HTTP-ONLY SESSIONS`), featuring instant field-level validation and clear red ward indicators (`• Email address is required.`) when required data is missing.
+
+---
+
 ## What is COFFER?
 
 **COFFER** is a production-grade, end-to-end personal finance and budget tracker designed to eliminate spreadsheet friction without sacrificing visual precision or data density. Unlike cartoonish budgeting apps or generic AI-generated dashboards, COFFER adheres to a restrained, high-contrast typographic hierarchy (*Fraunces*, *General Sans*, and *JetBrains Mono* tabular figures) and a curated color system (`#F7F5F0` warm paper canvas, `#141614` deep charcoal ink, `#1F5F4D` vault green) tailored for surgical financial clarity.
