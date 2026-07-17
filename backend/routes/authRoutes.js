@@ -186,6 +186,8 @@ router.post('/login', async (req, res) => {
     console.error('Login Error:', error);
     return res.status(500).json({ error: 'Internal server error during login.' });
   }
+});
+
 // Seed rich demo user data (accounts, transactions, and budgets)
 const seedDemoUserData = async (userId) => {
   await seedDefaultCategories(userId);
@@ -260,15 +262,16 @@ const seedDemoUserData = async (userId) => {
     }
   }
 
-  // 3. Create Budgets
+  // 3. Create Budgets for Current Month
+  const currentMonthStr = new Date().toISOString().slice(0, 7);
   if (catMap['Food & Dining']) {
-    await prisma.budget.create({ data: { userId, categoryId: catMap['Food & Dining'], amountLimit: 600.00 } });
+    await prisma.budget.create({ data: { userId, categoryId: catMap['Food & Dining'], monthlyLimit: 600.00, month: currentMonthStr } });
   }
   if (catMap['Shopping']) {
-    await prisma.budget.create({ data: { userId, categoryId: catMap['Shopping'], amountLimit: 400.00 } });
+    await prisma.budget.create({ data: { userId, categoryId: catMap['Shopping'], monthlyLimit: 400.00, month: currentMonthStr } });
   }
   if (catMap['Entertainment']) {
-    await prisma.budget.create({ data: { userId, categoryId: catMap['Entertainment'], amountLimit: 200.00 } });
+    await prisma.budget.create({ data: { userId, categoryId: catMap['Entertainment'], monthlyLimit: 200.00, month: currentMonthStr } });
   }
 };
 

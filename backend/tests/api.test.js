@@ -66,6 +66,25 @@ describe('COFFER Backend API Automated Suite', () => {
       expect(res.status).toBe(200);
       expect(res.body.user.id).toBe(userId);
     });
+
+    it('POST /api/auth/demo-login should automatically seed demo user with accounts and transactions', async () => {
+      const res = await request(app)
+        .post('/api/auth/demo-login')
+        .send({});
+
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty('accessToken');
+      expect(res.body.user.email).toBe('demo@coffer.app');
+
+      const demoToken = res.body.accessToken;
+      const accRes = await request(app)
+        .get('/api/accounts')
+        .set('Authorization', `Bearer ${demoToken}`);
+
+      expect(accRes.status).toBe(200);
+      expect(accRes.body.accounts.length).toBeGreaterThanOrEqual(3);
+      expect(accRes.body.accounts.some((a) => a.name === 'Main Checking Vault')).toBe(true);
+    });
   });
 
   describe('2. Accounts & Running Balance API', () => {
