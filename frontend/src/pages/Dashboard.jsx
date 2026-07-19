@@ -101,7 +101,7 @@ const Dashboard = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="font-fraunces text-3xl font-medium tracking-tight text-ink">
-            Financial Command Center
+            Financial Dashboard
           </h1>
           <p className="text-sm text-ink-muted font-sans">
             Live net worth aggregation and budget telemetry for your active ledger.
