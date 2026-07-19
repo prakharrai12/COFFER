@@ -13,7 +13,7 @@ export const HeroStatsSkeleton = () => (
 );
 
 export const TableSkeleton = ({ rows = 6 }) => (
-  <div className="w-full rounded-lg border border-border bg-surface overflow-hidden animate-pulse">
+  <div className="w-full rounded-lg border border-border bg-surface shadow-sm overflow-hidden animate-pulse">
     <div className="h-10 bg-surface-raised border-b border-border flex items-center px-4 gap-4">
       <div className="h-3 w-20 bg-border/60 rounded" />
       <div className="h-3 w-40 bg-border/60 rounded" />
