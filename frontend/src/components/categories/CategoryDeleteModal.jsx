@@ -94,7 +94,7 @@ const CategoryDeleteModal = ({ isOpen, onClose, category, categories = [], onDel
             disabled={submitting}
             className="text-xs font-medium text-white bg-negative hover:bg-negative/90 px-4 py-2.5 rounded shadow-xs transition-colors duration-150 flex items-center gap-2"
           >
-            {submitting ? 'Processing...' : reassignId ? 'Reassign & Delete' : 'Delete Category'}
+            {submitting ? 'Deleting...' : reassignId ? 'Reassign & Delete' : 'Delete Category'}
           </button>
         </div>
       </div>
