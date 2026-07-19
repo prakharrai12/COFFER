@@ -10,7 +10,7 @@ const EmptyState = ({
   return (
     <div className="py-16 px-6 rounded-lg border border-border border-dashed bg-surface/50 text-center flex flex-col items-center justify-center max-w-lg mx-auto my-8">
       <div className="w-12 h-12 rounded-full bg-canvas border border-border flex items-center justify-center font-mono font-bold text-ink-muted text-base mb-4 shadow-sm">
-        {icon === 'Vault' ? 'C' : icon}
+        {icon === 'Vault' ? 'V' : icon}
       </div>
       <h3 className="font-fraunces text-xl font-medium text-ink mb-2">
         {title}
