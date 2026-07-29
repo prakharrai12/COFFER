@@ -62,6 +62,13 @@ const Dashboard = () => {
     }
   };
 
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good Morning';
+    if (hour < 18) return 'Good Afternoon';
+    return 'Good Evening';
+  };
+
   const currency = user?.currency || '$ USD';
 
   return (
@@ -101,15 +108,26 @@ const Dashboard = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="font-fraunces text-3xl font-medium tracking-tight text-ink">
-            Financial Dashboard
+            {getGreeting()}, {user?.displayName ? user.displayName.split(' ')[0] : 'Treasury Manager'}
           </h1>
-          <p className="text-sm text-ink-muted font-sans">
+          <p className="text-sm text-ink-muted font-sans mt-0.5">
             Live net worth aggregation and budget telemetry for your active ledger.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <label htmlFor="monthSelect" className="text-xs font-mono uppercase text-ink-muted">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setCurrentMonth(new Date().toISOString().slice(0, 7))}
+            className={`px-2.5 py-1.5 rounded text-xs font-mono transition-colors ${
+              currentMonth === new Date().toISOString().slice(0, 7)
+                ? 'bg-brand text-white font-semibold'
+                : 'bg-surface border border-border text-ink-muted hover:text-ink'
+            }`}
+          >
+            Current Month
+          </button>
+          <label htmlFor="monthSelect" className="text-xs font-mono uppercase text-ink-muted hidden sm:inline">
             Period:
           </label>
           <input
