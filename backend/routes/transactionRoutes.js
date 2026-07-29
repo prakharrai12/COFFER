@@ -109,12 +109,19 @@ router.get('/', async (req, res) => {
       else if (tx.type === 'EXPENSE') totalExpense += tx.amount;
     });
 
+    const limitNum = parseInt(limit, 10);
+    const offsetNum = parseInt(offset, 10);
+    const totalPages = Math.ceil(totalCount / (limitNum || 1));
+    const currentPage = Math.floor(offsetNum / (limitNum || 1)) + 1;
+
     return res.status(200).json({
       transactions,
       pagination: {
         totalCount,
-        limit: parseInt(limit, 10),
-        offset: parseInt(offset, 10),
+        totalPages,
+        page: currentPage,
+        limit: limitNum,
+        offset: offsetNum,
       },
       summary: {
         totalIncome: Math.round(totalIncome * 100) / 100,
