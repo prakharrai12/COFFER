@@ -116,6 +116,17 @@ const Reports = () => {
 
           <div className="p-5 rounded-lg bg-surface border border-border shadow-2xs">
             <span className="text-[10px] font-mono tracking-wider uppercase text-ink-muted">
+              Net Savings Rate
+            </span>
+            <div className={`font-fraunces text-2xl font-medium mt-1 tabular-nums ${
+              totalInflow > 0 && (totalNet / totalInflow) >= 0.2 ? 'text-positive' : 'text-ink'
+            }`}>
+              {totalInflow > 0 ? `${Math.round((totalNet / totalInflow) * 100)}%` : '0%'}
+            </div>
+          </div>
+
+          <div className="p-5 rounded-lg bg-surface border border-border shadow-2xs">
+            <span className="text-[10px] font-mono tracking-wider uppercase text-ink-muted">
               Avg. Monthly Burn
             </span>
             <div className="font-fraunces text-2xl font-medium text-ink-muted mt-1 tabular-nums">
