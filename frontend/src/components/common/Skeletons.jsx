@@ -58,3 +58,8 @@ export const CardSkeleton = () => (
     <div className="h-40 w-full bg-border/30 rounded" />
   </div>
 );
+
+export const GenericSkeleton = ({ className = 'h-24 w-full' }) => (
+  <div className={`rounded-lg bg-surface border border-border animate-pulse ${className}`} />
+);
+
