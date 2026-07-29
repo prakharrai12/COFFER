@@ -25,6 +25,15 @@ describe('COFFER Backend API Automated Suite', () => {
     await prisma.$disconnect();
   });
 
+  describe('0. System Health Check', () => {
+    it('GET /api/health should return ok status and server uptime', async () => {
+      const res = await request(app).get('/api/health');
+      expect(res.status).toBe(200);
+      expect(res.body.status).toBe('ok');
+      expect(res.body).toHaveProperty('uptimeSeconds');
+    });
+  });
+
   describe('1. Authentication & Security Endpoints', () => {
     it('POST /api/auth/register should register a new user and seed default data', async () => {
       const res = await request(app)
