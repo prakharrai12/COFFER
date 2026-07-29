@@ -52,14 +52,27 @@ const AnimatedCurrency = ({
     };
   }, [value, duration]);
 
-  // Extract symbol from "currency string" e.g. "$ USD" -> "$", "€ EUR" -> "€", "₹ INR" -> "₹"
+  // Map currency symbol and determine locale
+  const currencyCode = currency ? currency.split(' ').pop().toUpperCase() : 'USD';
   const symbol = currency ? currency.split(' ')[0] : '$';
+
+  const localeMap = {
+    USD: 'en-US',
+    EUR: 'de-DE',
+    GBP: 'en-GB',
+    INR: 'en-IN',
+    JPY: 'ja-JP',
+    CAD: 'en-CA',
+    AUD: 'en-AU',
+  };
+
+  const targetLocale = localeMap[currencyCode] || 'en-US';
   const isNegative = displayValue < 0;
   const absValue = Math.abs(displayValue);
 
-  const formattedNumber = absValue.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+  const formattedNumber = absValue.toLocaleString(targetLocale, {
+    minimumFractionDigits: currencyCode === 'JPY' ? 0 : 2,
+    maximumFractionDigits: currencyCode === 'JPY' ? 0 : 2,
   });
 
   const signStr = isNegative ? '-' : showSign && displayValue > 0 ? '+' : '';
