@@ -95,6 +95,30 @@ const Transactions = () => {
     setIsModalOpen(true);
   };
 
+  const handleExportCSV = () => {
+    if (!transactions || transactions.length === 0) return;
+    const headers = ['ID', 'Date', 'Type', 'Amount', 'Description', 'Account', 'Category'];
+    const rows = transactions.map((t) => [
+      t.id,
+      new Date(t.date).toISOString().split('T')[0],
+      t.type,
+      t.amount,
+      `"${(t.description || '').replace(/"/g, '""')}"`,
+      `"${(t.account?.name || '').replace(/"/g, '""')}"`,
+      `"${(t.category?.name || 'Uncategorized').replace(/"/g, '""')}"`,
+    ]);
+
+    const csvContent = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `coffer_transactions_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <AppLayout>
       {/* Top Header */}
@@ -108,12 +132,23 @@ const Transactions = () => {
           </p>
         </div>
 
-        <button
-          onClick={handleOpenCreate}
-          className="bg-brand hover:bg-brand-light text-white font-medium px-4 py-2.5 rounded-lg shadow-sm transition-all duration-200 text-xs font-sans flex items-center gap-2 self-start sm:self-auto"
-        >
-          <span>+ Log Transaction</span>
-        </button>
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <button
+            onClick={handleExportCSV}
+            disabled={!transactions.length}
+            className="bg-surface hover:bg-canvas text-ink border border-border font-medium px-3.5 py-2 rounded-lg shadow-2xs transition-all duration-200 text-xs font-sans flex items-center gap-1.5 disabled:opacity-50"
+            title="Export filtered view as CSV"
+          >
+            <span>↓ Export CSV</span>
+          </button>
+
+          <button
+            onClick={handleOpenCreate}
+            className="bg-brand hover:bg-brand-light text-white font-medium px-4 py-2.5 rounded-lg shadow-sm transition-all duration-200 text-xs font-sans flex items-center gap-2"
+          >
+            <span>+ Log Transaction</span>
+          </button>
+        </div>
       </div>
 
       {/* Multi-Filter Bar */}
