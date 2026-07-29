@@ -1,8 +1,17 @@
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const getBaseUrl = () => {
+  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+  if (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')) {
+    return `${window.location.origin}/api`;
+  }
+  return 'http://localhost:5000/api';
+};
+
+const BASE_URL = getBaseUrl();
 
 class ApiClient {
   constructor() {
     this.accessToken = localStorage.getItem('coffer_access_token') || null;
+    this.defaultTimeoutMs = 15000;
   }
 
   setAccessToken(token) {
@@ -29,13 +38,29 @@ class ApiClient {
       headers.Authorization = `Bearer ${this.accessToken}`;
     }
 
+    const timeout = options.timeout || this.defaultTimeoutMs;
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+
     const config = {
       ...options,
       headers,
+      signal: controller.signal,
       credentials: 'include', // send httpOnly refresh cookie
     };
 
-    let response = await fetch(url, config);
+    let response;
+    try {
+      response = await fetch(url, config);
+    } catch (fetchError) {
+      clearTimeout(timer);
+      if (fetchError.name === 'AbortError') {
+        throw new Error(`Request timed out after ${timeout / 1000}s`);
+      }
+      throw fetchError;
+    } finally {
+      clearTimeout(timer);
+    }
 
     // If unauthorized or token expired, attempt auto-refresh exactly once
     if (response.status === 401 && !options._retry && endpoint !== '/auth/login' && endpoint !== '/auth/register' && endpoint !== '/auth/refresh') {
@@ -97,3 +122,4 @@ class ApiClient {
 
 const api = new ApiClient();
 export default api;
+
