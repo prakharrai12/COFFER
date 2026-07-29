@@ -4,8 +4,20 @@ import cookieParser from 'cookie-parser';
 
 const app = express();
 
+const allowedOrigins = [
+  process.env.CLIENT_URL || 'http://localhost:5173',
+  'http://localhost:3000',
+];
+
 const corsOptions = {
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps, curl, serverless) or matching domain
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(null, true); // Permissive fallback for production deployment
+    }
+  },
   credentials: true,
 };
 
@@ -13,9 +25,15 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
-// Health Check endpoint
+// Enhanced Health Check endpoint
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', service: 'COFFER API Server', timestamp: new Date().toISOString() });
+  res.json({
+    status: 'ok',
+    service: 'COFFER API Server',
+    environment: process.env.NODE_ENV || 'development',
+    timestamp: new Date().toISOString(),
+    uptimeSeconds: Math.floor(process.uptime()),
+  });
 });
 
 import authRoutes from './routes/authRoutes.js';
@@ -39,3 +57,4 @@ app.use((err, req, res, next) => {
 });
 
 export default app;
+
