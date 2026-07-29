@@ -86,6 +86,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateUserProfile = (updatedData) => {
+    setUser((prev) => (prev ? { ...prev, ...updatedData } : null));
+  };
+
   const logout = async () => {
     try {
       await api.post('/auth/logout', {});
@@ -108,6 +112,8 @@ export const AuthProvider = ({ children }) => {
         demoLogin,
         logout,
         setUser,
+        updateUserProfile,
+        refreshSession: checkUser,
       }}
     >
       {children}
