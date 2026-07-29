@@ -1,0 +1,10 @@
+# Vercel deployment ignore rules
+node_modules
+.git
+.github
+*.db
+backend/prisma/dev.db
+backend/tests
+coverage
+*.log
+.DS_Store
