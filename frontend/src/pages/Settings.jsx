@@ -389,6 +389,13 @@ const Settings = () => {
               <span className="font-bold text-brand-light">COFFER DIAGNOSTICS</span>
               <span className="text-positive">● ONLINE</span>
             </div>
+            <div className="space-y-1 text-[11px] opacity-80">
+              <p>Core Engine: v2.4.0-stable</p>
+              <p>Deployment: Vercel Edge / Serverless</p>
+              <p>Database: SQLite / Prisma ORM</p>
+              <p>Active Session ID: {user?.id ? user.id.slice(0, 8) : 'demo-session'}...</p>
+            </div>
+          </div>
             <div className="space-y-1.5 text-[11px] text-ink-muted">
               <div className="flex justify-between">
                 <span>DATABASE ENGINE:</span>
