@@ -145,7 +145,35 @@ const BudgetsAndCategories = () => {
                 description="Create your first category tag on the right panel to establish financial limits."
               />
             ) : (
-              <div className="space-y-6 divide-y divide-border/40">
+              <>
+                {/* Aggregate Summary Widget */}
+                {(() => {
+                  const totalCap = budgets.reduce((acc, b) => acc + (b.monthlyLimit || 0), 0);
+                  const totalSpent = budgets.reduce((acc, b) => acc + (b.spent || 0), 0);
+                  const overallPct = totalCap > 0 ? Math.round((totalSpent / totalCap) * 100) : 0;
+                  return (
+                    <div className="mb-6 p-4 rounded-lg bg-canvas border border-border flex items-center justify-between gap-4 text-xs font-mono">
+                      <div>
+                        <span className="text-ink-muted block text-[11px] uppercase tracking-wider">Total Cap Allocated</span>
+                        <span className="text-ink font-bold text-sm">${totalCap.toFixed(2)}</span>
+                      </div>
+                      <div>
+                        <span className="text-ink-muted block text-[11px] uppercase tracking-wider">Total Spent</span>
+                        <span className={`font-bold text-sm ${totalSpent > totalCap && totalCap > 0 ? 'text-negative' : 'text-ink'}`}>
+                          ${totalSpent.toFixed(2)}
+                        </span>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-ink-muted block text-[11px] uppercase tracking-wider">Budget Health</span>
+                        <span className={`font-bold text-sm ${overallPct >= 100 ? 'text-negative' : overallPct >= 80 ? 'text-warning' : 'text-positive'}`}>
+                          {overallPct}% Utilized
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                <div className="space-y-6 divide-y divide-border/40">
                 {budgets.map((b) => {
                   const hasBudget = b.monthlyLimit !== null;
                   const isEditing = editingBudgetId === b.categoryId;
