@@ -62,9 +62,21 @@ const TransactionModal = ({
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+
+    let autoCategoryId = null;
+    if (name === 'note' && value && categories.length > 0 && !isEdit) {
+      const lowerNote = value.toLowerCase();
+      const matched = categories.find((cat) => {
+        const catLower = cat.name.toLowerCase();
+        return lowerNote.includes(catLower) || (catLower.includes('food') && (lowerNote.includes('coffee') || lowerNote.includes('uber eats')));
+      });
+      if (matched) autoCategoryId = matched.id;
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
+      ...(autoCategoryId ? { categoryId: autoCategoryId } : {}),
     }));
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: '' }));
     setServerError('');
