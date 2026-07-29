@@ -50,12 +50,16 @@ const Navbar = () => {
         {/* User Info & Actions */}
         <div className="flex items-center gap-4">
           {user && (
-            <div className="hidden sm:flex items-center gap-2 text-xs border-r border-border pr-4 py-1">
-              <span className="w-2 h-2 rounded-full bg-positive inline-block" />
-              <span className="font-medium text-ink">{user.displayName || user.email.split('@')[0]}</span>
-              <span className="font-mono text-[10px] bg-canvas px-1.5 py-0.5 rounded text-ink-muted">
-                {user.currency || '$ USD'}
-              </span>
+            <div className="hidden sm:flex items-center gap-2.5 text-xs border-r border-border pr-4 py-1">
+              <div className="w-6 h-6 rounded-full bg-brand/10 border border-brand/20 text-brand flex items-center justify-center font-mono font-bold text-[10px]">
+                {(user.displayName || user.email || 'U').charAt(0).toUpperCase()}
+              </div>
+              <div className="flex flex-col">
+                <span className="font-medium text-ink leading-tight">{user.displayName || user.email.split('@')[0]}</span>
+                <span className="font-mono text-[9px] text-ink-muted leading-tight">
+                  {user.currency || '$ USD'}
+                </span>
+              </div>
             </div>
           )}
 
