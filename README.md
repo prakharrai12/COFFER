@@ -57,6 +57,32 @@ Experience the full **COFFER Vault** immediately upon launching without manually
 
 ---
 
+## 🚀 Deploying to Vercel via Vercel CLI
+
+COFFER is pre-configured for seamless single-command deployment via Vercel CLI using `vercel.json` and `.vercelignore`.
+
+### Step 1: Install & Login Vercel CLI
+```bash
+npm install -g vercel
+vercel login
+```
+
+### Step 2: Deploy Production Build
+From the repository root directory (`c:\Users\prakh\COFFER`), execute:
+```bash
+vercel --prod
+```
+
+### Required Environment Variables on Vercel
+| Variable | Description | Example / Default |
+| :--- | :--- | :--- |
+| `DATABASE_URL` | Prisma DB connection string | `file:./dev.db` or PostgreSQL URI |
+| `JWT_ACCESS_SECRET` | Secret key for access JWTs | `coffer-access-secret-key-12345` |
+| `JWT_REFRESH_SECRET` | Secret key for refresh cookies | `coffer-refresh-secret-key-67890` |
+| `CLIENT_URL` | Production Frontend Origin | `https://your-coffer-app.vercel.app` |
+
+---
+
 ## Quickstart & Setup Guide
 
 ### Prerequisites
