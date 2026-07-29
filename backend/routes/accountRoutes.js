@@ -50,7 +50,27 @@ router.get('/', async (req, res) => {
       };
     });
 
-    return res.status(200).json({ accounts: enrichedAccounts });
+    let totalAssets = 0;
+    let totalLiabilities = 0;
+
+    enrichedAccounts.forEach((acc) => {
+      if (['CREDIT', 'LOAN'].includes(acc.type)) {
+        totalLiabilities += Math.max(0, acc.runningBalance);
+      } else {
+        totalAssets += Math.max(0, acc.runningBalance);
+      }
+    });
+
+    const netWorth = Math.round((totalAssets - totalLiabilities) * 100) / 100;
+
+    return res.status(200).json({
+      accounts: enrichedAccounts,
+      summary: {
+        totalAssets: Math.round(totalAssets * 100) / 100,
+        totalLiabilities: Math.round(totalLiabilities * 100) / 100,
+        netWorth,
+      },
+    });
   } catch (error) {
     console.error('Get Accounts Error:', error);
     return res.status(500).json({ error: 'Internal server error fetching accounts.' });
