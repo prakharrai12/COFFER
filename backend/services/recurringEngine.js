@@ -53,6 +53,8 @@ export const processRecurringTransactions = async (userId = null) => {
           nextDueDate.setDate(nextDueDate.getDate() + 7);
         } else if (parent.recurringInterval === 'MONTHLY') {
           nextDueDate.setMonth(nextDueDate.getMonth() + 1);
+        } else if (parent.recurringInterval === 'YEARLY') {
+          nextDueDate.setFullYear(nextDueDate.getFullYear() + 1);
         } else {
           break;
         }
@@ -72,6 +74,6 @@ export const processRecurringTransactions = async (userId = null) => {
     return { processedCount };
   } catch (error) {
     console.error('Process Recurring Transactions Error:', error);
-    throw error;
+    return { processedCount: 0, error: error.message };
   }
 };
