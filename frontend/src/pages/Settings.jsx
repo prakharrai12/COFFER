@@ -395,8 +395,7 @@ const Settings = () => {
               <p>Database: SQLite / Prisma ORM</p>
               <p>Active Session ID: {user?.id ? user.id.slice(0, 8) : 'demo-session'}...</p>
             </div>
-          </div>
-            <div className="space-y-1.5 text-[11px] text-ink-muted">
+            <div className="space-y-1.5 text-[11px] text-ink-muted border-t border-border/20 pt-2">
               <div className="flex justify-between">
                 <span>DATABASE ENGINE:</span>
                 <span className="text-canvas">SQLite (dev.db)</span>

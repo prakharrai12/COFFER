@@ -1,0 +1,17 @@
+{
+  "name": "coffer-monorepo",
+  "version": "2.4.0",
+  "private": true,
+  "description": "COFFER - Precision Wealth & Cashflow Intelligence",
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build",
+    "test": "cd backend && npm test",
+    "vercel-build": "cd backend && npx prisma generate && cd ../frontend && npm install && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prakharrai12/COFFER.git"
+  },
+  "author": "prakharrai12",
+  "license": "MIT"
+}

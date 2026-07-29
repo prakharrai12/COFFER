@@ -286,6 +286,7 @@ const BudgetsAndCategories = () => {
                   );
                 })}
               </div>
+              </>
             )}
           </div>
         </div>
