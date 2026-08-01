@@ -17,10 +17,15 @@ const PasswordStrengthMeter = ({ password = '' }) => {
 
   const { score, label, colorClass } = checkStrength(password);
 
-  if (!password) return null;
+  const requirements = [
+    { label: 'At least 8 characters', met: password.length >= 8 },
+    { label: 'One uppercase letter', met: /[A-Z]/.test(password) },
+    { label: 'One number (0-9)', met: /[0-9]/.test(password) },
+    { label: 'One special symbol (!@#$...)', met: /[^A-Za-z0-9]/.test(password) },
+  ];
 
   return (
-    <div className="mt-1 mb-4">
+    <div className="mt-1.5 mb-4 space-y-2">
       <div className="flex gap-1.5 h-1.5 w-full">
         {[1, 2, 3, 4].map((level) => (
           <div
@@ -31,12 +36,12 @@ const PasswordStrengthMeter = ({ password = '' }) => {
           />
         ))}
       </div>
-      <div className="flex justify-between items-center mt-1">
-        <span className="text-[11px] font-medium text-ink-muted uppercase tracking-wider">
-          Password Strength
+      <div className="flex justify-between items-center">
+        <span className="text-[10px] font-mono text-ink-muted uppercase tracking-wider">
+          Security Level
         </span>
         <span
-          className={`text-[11px] font-semibold uppercase tracking-wider ${
+          className={`text-[10px] font-mono font-semibold uppercase tracking-wider ${
             score <= 1
               ? 'text-negative'
               : score === 2
@@ -46,6 +51,19 @@ const PasswordStrengthMeter = ({ password = '' }) => {
         >
           {label}
         </span>
+      </div>
+
+      <div className="grid grid-cols-2 gap-x-2 gap-y-1 pt-1">
+        {requirements.map((req, idx) => (
+          <div key={idx} className="flex items-center gap-1 text-[10px] font-sans">
+            <span className={req.met ? 'text-positive font-bold' : 'text-ink-muted/50'}>
+              {req.met ? '✓' : '○'}
+            </span>
+            <span className={req.met ? 'text-ink font-medium' : 'text-ink-muted'}>
+              {req.label}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );
