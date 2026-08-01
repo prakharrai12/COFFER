@@ -185,34 +185,18 @@ COFFER was engineered through a strict sequential 17-commit methodology:
 | **Borders** | `--border` | `#E3E0D8` | Structural dividers & input contours |
 
 ---
-*COFFER v1.0 • Built for financial precision and speed.*
+---
 
-<!-- Update 1 -->
+### Recent Enhancements & Release Features
 
-<!-- Update 2 -->
+- **Keyboard Navigation**: Quick shortcut `⌘K` badge indicator in Navbar for swift workspace focus.
+- **Ledger Date Presets**: Quick filter chips (`This Month`, `Last 30 Days`, `This Year`, `All Ledger`) on the Transactions page.
+- **Interactive Security Meter**: Real-time password complexity checklist (8+ chars, uppercase, number, symbol) during user registration.
+- **Data Portability & Backup**: Download complete workspace ledger JSON backup directly from Settings.
+- **Analytics Distribution Ratios**: `heroStats` endpoint includes top category metrics and savings rate ratios.
+- **Budget Health Telemetry**: Enhanced utilization badges (`Exceeded`, `Near Limit`, `Safe`) with exact percentage indicators.
+- **Account Filtering & Sanitization**: Query parameter `type` filtering on `/api/accounts` and automatic input trimming on transaction notes.
+- **Reusable UI Components**: Exported `Tooltip` wrapper and card hover elevation transitions.
 
-<!-- Update 3 -->
-
-<!-- Update 4 -->
-
-<!-- Update 5 -->
-
-<!-- Update 6 -->
-
-<!-- Update 7 -->
-
-<!-- Update 8 -->
-
-<!-- Update 9 -->
-
-<!-- Update 10 -->
-
-<!-- Additional update 1 -->
-
-<!-- Additional update 2 -->
-
-<!-- Additional update 3 -->
-
-<!-- Additional update 4 -->
-
-<!-- Final push update -->
+---
+*COFFER v1.2 • Built for financial precision and speed.*
