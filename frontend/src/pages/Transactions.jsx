@@ -85,6 +85,30 @@ const Transactions = () => {
     });
   };
 
+  const handleDatePreset = (preset) => {
+    const today = new Date();
+    const formatDate = (d) => d.toISOString().split('T')[0];
+    let start = '';
+    let end = formatDate(today);
+
+    if (preset === 'thisMonth') {
+      const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+      start = formatDate(firstDay);
+    } else if (preset === 'last30Days') {
+      const thirtyDaysAgo = new Date(today);
+      thirtyDaysAgo.setDate(today.getDate() - 30);
+      start = formatDate(thirtyDaysAgo);
+    } else if (preset === 'thisYear') {
+      const firstOfYear = new Date(today.getFullYear(), 0, 1);
+      start = formatDate(firstOfYear);
+    } else if (preset === 'all') {
+      start = '';
+      end = '';
+    }
+
+    setFilters((prev) => ({ ...prev, startDate: start, endDate: end }));
+  };
+
   const handleOpenCreate = () => {
     setSelectedTx(null);
     setIsModalOpen(true);
@@ -239,7 +263,26 @@ const Transactions = () => {
 
         {/* Quick Audit Shortcut Chips */}
         <div className="pt-2 flex flex-wrap items-center gap-2 text-xs font-sans">
-          <span className="text-[10px] font-mono text-ink-muted uppercase mr-1">Quick Filters:</span>
+          <span className="text-[10px] font-mono text-ink-muted uppercase mr-1">Date Ranges:</span>
+          <button
+            onClick={() => handleDatePreset('thisMonth')}
+            className="px-2.5 py-1 rounded-full text-[11px] border bg-canvas border-border text-ink-muted hover:text-ink hover:border-brand/40 transition-colors"
+          >
+            📅 This Month
+          </button>
+          <button
+            onClick={() => handleDatePreset('last30Days')}
+            className="px-2.5 py-1 rounded-full text-[11px] border bg-canvas border-border text-ink-muted hover:text-ink hover:border-brand/40 transition-colors"
+          >
+            ⏱️ Last 30 Days
+          </button>
+          <button
+            onClick={() => handleDatePreset('thisYear')}
+            className="px-2.5 py-1 rounded-full text-[11px] border bg-canvas border-border text-ink-muted hover:text-ink hover:border-brand/40 transition-colors"
+          >
+            📊 This Year
+          </button>
+          <span className="text-[10px] font-mono text-ink-muted uppercase ml-2 mr-1">Quick Filters:</span>
           <button
             onClick={() => setFilters((prev) => ({ ...prev, search: '', type: 'ALL', accountId: 'ALL', categoryId: 'ALL' }))}
             className={`px-2.5 py-1 rounded-full text-[11px] border transition-colors ${!filters.search && filters.type === 'ALL' && filters.categoryId === 'ALL' ? 'bg-brand text-white border-brand font-medium' : 'bg-canvas border-border text-ink-muted hover:text-ink'}`}
