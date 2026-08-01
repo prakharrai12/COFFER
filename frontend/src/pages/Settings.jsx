@@ -138,6 +138,32 @@ const Settings = () => {
     }
   };
 
+  const handleExportJSON = async () => {
+    try {
+      const [accRes, catRes, txRes] = await Promise.all([
+        api.get('/accounts'),
+        api.get('/categories'),
+        api.get('/transactions?limit=1000'),
+      ]);
+      const backupData = {
+        exportDate: new Date().toISOString(),
+        userEmail: user?.email,
+        accounts: accRes.accounts || [],
+        categories: catRes.categories || [],
+        transactions: txRes.transactions || [],
+      };
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `coffer-backup-${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    } catch (err) {
+      alert('Failed to export data: ' + err.message);
+    }
+  };
+
   return (
     <AppLayout>
       {/* Top Header */}
@@ -373,11 +399,13 @@ const Settings = () => {
                 </div>
 
                 <div>
-                  <span className="block font-mono text-[10px] uppercase text-ink-muted">Session Authentication</span>
-                  <span className="inline-flex items-center gap-1.5 text-positive font-medium mt-1">
-                    <span className="w-2 h-2 rounded-full bg-positive inline-block" />
-                    Secure HTTP-Only Cookie + Access JWT
-                  </span>
+                  <span className="block font-mono text-[10px] uppercase text-ink-muted mb-1.5">Data Portability</span>
+                  <button
+                    onClick={handleExportJSON}
+                    className="w-full bg-surface hover:bg-canvas text-ink border border-border font-medium py-2 px-3 rounded text-xs transition-colors duration-150 flex items-center justify-center gap-2"
+                  >
+                    <span>💾 Export Complete Ledger JSON</span>
+                  </button>
                 </div>
               </div>
             )}
