@@ -151,7 +151,7 @@ const Dashboard = () => {
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {/* Net Worth Hero */}
-            <div className="p-6 rounded-lg bg-ink text-canvas border border-ink shadow-sm flex flex-col justify-between">
+            <div className="p-6 rounded-lg bg-ink text-canvas border border-ink shadow-sm hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
               <div>
                 <span className="text-[11px] font-mono tracking-wider uppercase text-ink-muted">
                   Total Net Worth
@@ -167,7 +167,7 @@ const Dashboard = () => {
             </div>
 
             {/* Total Income */}
-            <div className="p-6 rounded-lg bg-surface border border-border shadow-2xs flex flex-col justify-between">
+            <div className="p-6 rounded-lg bg-surface border border-border shadow-2xs hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
               <div>
                 <span className="text-[11px] font-mono tracking-wider uppercase text-ink-muted">
                   Period Inflow
@@ -182,7 +182,7 @@ const Dashboard = () => {
             </div>
 
             {/* Total Spend */}
-            <div className="p-6 rounded-lg bg-surface border border-border shadow-2xs flex flex-col justify-between">
+            <div className="p-6 rounded-lg bg-surface border border-border shadow-2xs hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
               <div>
                 <span className="text-[11px] font-mono tracking-wider uppercase text-ink-muted">
                   Period Outflow
