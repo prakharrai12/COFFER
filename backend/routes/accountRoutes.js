@@ -9,8 +9,14 @@ router.use(requireAuth);
 // GET /api/accounts
 router.get('/', async (req, res) => {
   try {
+    const { type } = req.query;
+    const where = { userId: req.user.id };
+    if (type && type !== 'ALL') {
+      where.type = type.toUpperCase();
+    }
+
     const accounts = await prisma.account.findMany({
-      where: { userId: req.user.id },
+      where,
       include: {
         transactions: {
           select: {
