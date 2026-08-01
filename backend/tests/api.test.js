@@ -240,6 +240,16 @@ describe('COFFER Backend API Automated Suite', () => {
       expect(res.body.heroStats.totalIncome).toBe(5000);
       expect(res.body.heroStats.totalSpend).toBe(142.50);
       expect(res.body.heroStats.net).toBe(4857.50);
+      expect(res.body.heroStats).toHaveProperty('topCategory');
+    });
+
+    it('GET /api/accounts?type=CHECKING should filter accounts by specified account type', async () => {
+      const res = await request(app)
+        .get('/api/accounts?type=CHECKING')
+        .set('Authorization', `Bearer ${authToken}`);
+
+      expect(res.status).toBe(200);
+      expect(res.body.accounts.every((a) => a.type === 'CHECKING')).toBe(true);
     });
   });
 });
