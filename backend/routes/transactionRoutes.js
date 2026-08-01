@@ -172,6 +172,8 @@ router.post('/', async (req, res) => {
       recurringInterval = null,
     } = req.body;
 
+    const sanitizedNote = typeof note === 'string' ? note.trim() : '';
+
     if (!accountId || !categoryId || amount === undefined || !date || !type) {
       return res.status(400).json({
         error: 'accountId, categoryId, amount, date, and type (INCOME/EXPENSE) are required.',
@@ -206,7 +208,7 @@ router.post('/', async (req, res) => {
         categoryId,
         amount: Math.abs(numAmount),
         date: txDate,
-        note: note ? note.trim() : '',
+        note: sanitizedNote,
         type: type === 'INCOME' ? 'INCOME' : 'EXPENSE',
         isRecurring: Boolean(isRecurring),
         recurringInterval: isRecurring ? recurringInterval : null,
