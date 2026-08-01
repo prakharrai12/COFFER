@@ -25,6 +25,9 @@ const Navbar = () => {
             <span className="font-mono text-xs font-semibold tracking-[0.2em] uppercase text-ink">
               COFFER
             </span>
+            <span className="hidden lg:inline-flex items-center px-1.5 py-0.5 rounded border border-border text-[9px] font-mono text-ink-muted bg-canvas/60 ml-1">
+              ⌘K
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
