@@ -119,6 +119,9 @@ router.get('/dashboard', async (req, res) => {
       return { ...cleanAcc, runningBalance: balance };
     });
 
+    const topCategory = spendByCategory.length > 0 ? spendByCategory[0].name : 'N/A';
+    const savingsRateRatio = totalIncome > 0 ? Math.max(0, Math.round(((totalIncome - totalSpend) / totalIncome) * 100)) : 0;
+
     return res.status(200).json({
       month: monthStr,
       heroStats: {
@@ -126,6 +129,8 @@ router.get('/dashboard', async (req, res) => {
         totalSpend: Math.round(totalSpend * 100) / 100,
         net: Math.round(net * 100) / 100,
         netWorth: Math.round(netWorth * 100) / 100,
+        topCategory,
+        savingsRateRatio,
       },
       spendByCategory,
       budgetSummary,
