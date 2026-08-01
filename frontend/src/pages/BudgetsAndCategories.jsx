@@ -193,14 +193,15 @@ const BudgetsAndCategories = () => {
                           <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: b.categoryColor }} />
                           <span className="font-semibold text-ink text-sm">{b.categoryName}</span>
                           {hasBudget && (
-                            <span className={`font-mono text-[10px] px-1.5 py-0.5 rounded uppercase tracking-wider ${
+                            <span className={`font-mono text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1 border ${
                               b.status === 'danger'
-                                ? 'bg-negative/10 text-negative font-bold'
+                                ? 'bg-negative/10 text-negative border-negative/20 font-bold'
                                 : b.status === 'warning'
-                                ? 'bg-warning/10 text-warning font-semibold'
-                                : 'bg-positive/10 text-positive font-medium'
+                                ? 'bg-warning/10 text-warning border-warning/20 font-semibold'
+                                : 'bg-positive/10 text-positive border-positive/20 font-medium'
                             }`}>
-                              {b.status === 'danger' ? 'Over Limit' : b.status === 'warning' ? 'Near Limit' : 'On Track'}
+                              <span>{b.status === 'danger' ? '🚨 Exceeded' : b.status === 'warning' ? '⚠️ Near Limit' : '✓ Safe'}</span>
+                              <span className="opacity-80 font-normal">({b.percentage}%)</span>
                             </span>
                           )}
                         </div>
