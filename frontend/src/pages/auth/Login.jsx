@@ -12,6 +12,7 @@ const Login = () => {
     password: '',
   });
 
+  const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState('');
@@ -174,15 +175,25 @@ const Login = () => {
               required
             />
 
-            <FloatingInput
-              label="Password"
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
-              error={errors.password}
-              required
-            />
+            <div className="relative">
+              <FloatingInput
+                label="Password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                value={formData.password}
+                onChange={handleChange}
+                error={errors.password}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-3.5 text-ink-muted hover:text-ink transition-colors text-xs font-mono font-medium px-1.5 py-0.5 rounded bg-surface/50 border border-border/40"
+                title={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? 'HIDE' : 'SHOW'}
+              </button>
+            </div>
 
             <div className="flex justify-end mb-6 -mt-2">
               <Link
