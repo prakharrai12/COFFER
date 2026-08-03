@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import request from 'supertest';
 import app from '../app.js';
 import prisma from '../prismaClient.js';
+import { validatePasswordPolicy } from '../services/passwordValidator.js';
 
 let authToken = '';
 let userId = '';
@@ -93,6 +94,60 @@ describe('COFFER Backend API Automated Suite', () => {
       expect(accRes.status).toBe(200);
       expect(accRes.body.accounts.length).toBeGreaterThanOrEqual(3);
       expect(accRes.body.accounts.some((a) => a.name === 'Main Checking Vault')).toBe(true);
+    });
+
+    it('validatePasswordPolicy utility should accurately score and validate password strength', () => {
+      const weak = validatePasswordPolicy('pass');
+      expect(weak.isValid).toBe(false);
+      expect(weak.score).toBeLessThan(50);
+
+      const strong = validatePasswordPolicy('SuperP@ssw0rd2026!');
+      expect(strong.isValid).toBe(true);
+      expect(strong.score).toBe(100);
+    });
+
+    it('POST /api/auth/change-password should reject incorrect current password', async () => {
+      const res = await request(app)
+        .post('/api/auth/change-password')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          currentPassword: 'WrongPassword!',
+          newPassword: 'NewSecurePass123!',
+        });
+
+      expect(res.status).toBe(401);
+      expect(res.body.error).toContain('incorrect');
+    });
+
+    it('POST /api/auth/change-password should update password when valid credentials supplied', async () => {
+      const res = await request(app)
+        .post('/api/auth/change-password')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          currentPassword: 'Password123!',
+          newPassword: 'NewSecurePass123!',
+        });
+
+      expect(res.status).toBe(200);
+      expect(res.body.message).toContain('successfully');
+
+      // Verify login with new password works
+      const loginRes = await request(app)
+        .post('/api/auth/login')
+        .send({
+          email: 'testuser@coffer.app',
+          password: 'NewSecurePass123!',
+        });
+
+      expect(loginRes.status).toBe(200);
+      expect(loginRes.body).toHaveProperty('accessToken');
+      authToken = loginRes.body.accessToken;
+    });
+
+    it('GET /api/auth/verify-reset-token should validate invalid or missing tokens', async () => {
+      const res = await request(app).get('/api/auth/verify-reset-token?token=invalid_token_123');
+      expect(res.status).toBe(400);
+      expect(res.body.valid).toBe(false);
     });
   });
 
