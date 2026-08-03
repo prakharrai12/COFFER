@@ -25,6 +25,16 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
+// Root status endpoint for backend service
+app.get('/', (req, res) => {
+  res.json({
+    status: 'ok',
+    service: 'COFFER Backend API Server',
+    version: '2.5.0',
+    health: '/api/health'
+  });
+});
+
 // Enhanced Health Check endpoint
 app.get('/api/health', (req, res) => {
   res.json({
