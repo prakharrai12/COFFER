@@ -34,6 +34,47 @@ const Settings = () => {
   const [formError, setFormError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
+  // Password Change state
+  const [showChangePassword, setShowChangePassword] = useState(false);
+  const [pwdForm, setPwdForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
+  const [pwdSubmitting, setPwdSubmitting] = useState(false);
+  const [pwdMessage, setPwdMessage] = useState({ type: '', text: '' });
+
+  const handleChangePasswordSubmit = async (e) => {
+    e.preventDefault();
+    setPwdMessage({ type: '', text: '' });
+
+    if (!pwdForm.currentPassword || !pwdForm.newPassword || !pwdForm.confirmPassword) {
+      setPwdMessage({ type: 'error', text: 'All password fields are required.' });
+      return;
+    }
+
+    if (pwdForm.newPassword.length < 8) {
+      setPwdMessage({ type: 'error', text: 'New password must be at least 8 characters long.' });
+      return;
+    }
+
+    if (pwdForm.newPassword !== pwdForm.confirmPassword) {
+      setPwdMessage({ type: 'error', text: 'New password and confirmation do not match.' });
+      return;
+    }
+
+    setPwdSubmitting(true);
+    try {
+      await api.post('/auth/change-password', {
+        currentPassword: pwdForm.currentPassword,
+        newPassword: pwdForm.newPassword,
+      });
+      setPwdMessage({ type: 'success', text: 'Password changed successfully!' });
+      setPwdForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      setTimeout(() => setShowChangePassword(false), 2000);
+    } catch (err) {
+      setPwdMessage({ type: 'error', text: err.message || 'Failed to update password.' });
+    } finally {
+      setPwdSubmitting(false);
+    }
+  };
+
   // Profile preferences state
   const [profileCurrency, setProfileCurrency] = useState(user?.currency || '$ USD');
   const [profileSaved, setProfileSaved] = useState(false);
@@ -402,10 +443,90 @@ const Settings = () => {
                   <span className="block font-mono text-[10px] uppercase text-ink-muted mb-1.5">Data Portability</span>
                   <button
                     onClick={handleExportJSON}
-                    className="w-full bg-surface hover:bg-canvas text-ink border border-border font-medium py-2 px-3 rounded text-xs transition-colors duration-150 flex items-center justify-center gap-2"
+                    className="w-full bg-surface hover:bg-canvas text-ink border border-border font-medium py-2 px-3 rounded text-xs transition-colors duration-150 flex items-center justify-center gap-2 mb-4"
                   >
                     <span>💾 Export Complete Ledger JSON</span>
                   </button>
+                </div>
+
+                {/* Change Password Card Section */}
+                <div className="border-t border-border pt-4">
+                  <h4 className="font-fraunces text-sm font-medium text-ink mb-1">
+                    Security & Passphrase
+                  </h4>
+                  <p className="text-[11px] text-ink-muted mb-3">
+                    Rotate your authentication key to protect financial records.
+                  </p>
+
+                  {showChangePassword ? (
+                    <form onSubmit={handleChangePasswordSubmit} className="space-y-3 p-3 rounded-lg bg-canvas border border-border">
+                      {pwdMessage.text && (
+                        <div className={`p-2 rounded text-xs ${
+                          pwdMessage.type === 'error' ? 'bg-negative/10 border border-negative/30 text-negative' : 'bg-positive/10 border border-positive/30 text-positive'
+                        }`}>
+                          {pwdMessage.text}
+                        </div>
+                      )}
+
+                      <div>
+                        <label className="block text-[10px] font-mono uppercase text-ink-muted mb-1">Current Password</label>
+                        <input
+                          type="password"
+                          required
+                          value={pwdForm.currentPassword}
+                          onChange={(e) => setPwdForm({ ...pwdForm, currentPassword: e.target.value })}
+                          className="w-full rounded border border-border bg-surface px-2.5 py-1.5 text-xs text-ink focus:outline-none focus:border-brand"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] font-mono uppercase text-ink-muted mb-1">New Passphrase</label>
+                        <input
+                          type="password"
+                          required
+                          value={pwdForm.newPassword}
+                          onChange={(e) => setPwdForm({ ...pwdForm, newPassword: e.target.value })}
+                          className="w-full rounded border border-border bg-surface px-2.5 py-1.5 text-xs text-ink focus:outline-none focus:border-brand"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] font-mono uppercase text-ink-muted mb-1">Confirm New Passphrase</label>
+                        <input
+                          type="password"
+                          required
+                          value={pwdForm.confirmPassword}
+                          onChange={(e) => setPwdForm({ ...pwdForm, confirmPassword: e.target.value })}
+                          className="w-full rounded border border-border bg-surface px-2.5 py-1.5 text-xs text-ink focus:outline-none focus:border-brand"
+                        />
+                      </div>
+
+                      <div className="flex gap-2 justify-end pt-1">
+                        <button
+                          type="button"
+                          onClick={() => { setShowChangePassword(false); setPwdMessage({ type: '', text: '' }); }}
+                          className="text-xs px-2.5 py-1 rounded border border-border text-ink-muted hover:text-ink"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          disabled={pwdSubmitting}
+                          className="text-xs px-3 py-1 rounded bg-brand text-white font-medium hover:bg-brand-light disabled:opacity-50"
+                        >
+                          {pwdSubmitting ? 'Updating...' : 'Update Passphrase'}
+                        </button>
+                      </div>
+                    </form>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setShowChangePassword(true)}
+                      className="w-full bg-brand/5 hover:bg-brand/10 text-brand border border-brand/20 font-medium py-2 px-3 rounded text-xs transition-colors duration-150 flex items-center justify-center gap-2"
+                    >
+                      <span>🔒 Change Vault Password</span>
+                    </button>
+                  )}
                 </div>
               </div>
             )}
