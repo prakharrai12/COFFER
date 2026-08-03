@@ -5,6 +5,11 @@ dotenv.config();
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`COFFER Backend API Server running on port ${PORT}`);
-});
+// Only start standalone listener if not running on Vercel Serverless
+if (!process.env.VERCEL && process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`COFFER Backend API Server running on port ${PORT}`);
+  });
+}
+
+export default app;
