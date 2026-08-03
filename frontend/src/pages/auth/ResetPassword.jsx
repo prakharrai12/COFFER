@@ -14,6 +14,8 @@ const ResetPassword = () => {
     confirmPassword: '',
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState('');
@@ -138,27 +140,45 @@ const ResetPassword = () => {
             </div>
           ) : (
             <form onSubmit={handleSubmit} noValidate>
-              <FloatingInput
-                label="New Password"
-                name="newPassword"
-                type="password"
-                value={formData.newPassword}
-                onChange={handleChange}
-                error={errors.newPassword}
-                required
-              />
+              <div className="relative">
+                <FloatingInput
+                  label="New Password"
+                  name="newPassword"
+                  type={showPassword ? "text" : "password"}
+                  value={formData.newPassword}
+                  onChange={handleChange}
+                  error={errors.newPassword}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-3.5 text-ink-muted hover:text-ink transition-colors text-xs font-mono font-medium px-1.5 py-0.5 rounded bg-surface/50 border border-border/40"
+                >
+                  {showPassword ? 'HIDE' : 'SHOW'}
+                </button>
+              </div>
 
               <PasswordStrengthMeter password={formData.newPassword} />
 
-              <FloatingInput
-                label="Confirm New Password"
-                name="confirmPassword"
-                type="password"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                error={errors.confirmPassword}
-                required
-              />
+              <div className="relative">
+                <FloatingInput
+                  label="Confirm New Password"
+                  name="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  error={errors.confirmPassword}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-3.5 text-ink-muted hover:text-ink transition-colors text-xs font-mono font-medium px-1.5 py-0.5 rounded bg-surface/50 border border-border/40"
+                >
+                  {showConfirmPassword ? 'HIDE' : 'SHOW'}
+                </button>
+              </div>
 
               <button
                 type="submit"
