@@ -1,6 +1,6 @@
 const getBaseUrl = () => {
   if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
-  if (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')) {
+  if (typeof window !== 'undefined' && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')) {
     return `${window.location.origin}/api`;
   }
   return 'http://localhost:5000/api';
