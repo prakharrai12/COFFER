@@ -43,9 +43,30 @@ export const AuthProvider = ({ children }) => {
       api.setAccessToken(null);
     };
 
+    let idleTimer;
+    const IDLE_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes idle timeout
+
+    const resetIdleTimer = () => {
+      if (idleTimer) clearTimeout(idleTimer);
+      if (user) {
+        idleTimer = setTimeout(() => {
+          console.warn('[COFFER SECURITY] Session expired due to user inactivity.');
+          logout();
+        }, IDLE_TIMEOUT_MS);
+      }
+    };
+
+    const activityEvents = ['mousedown', 'keydown', 'scroll', 'touchstart'];
+    activityEvents.forEach((evt) => window.addEventListener(evt, resetIdleTimer));
+    resetIdleTimer();
+
     window.addEventListener('coffer:unauthorized', handleUnauthorized);
-    return () => window.removeEventListener('coffer:unauthorized', handleUnauthorized);
-  }, []);
+    return () => {
+      if (idleTimer) clearTimeout(idleTimer);
+      activityEvents.forEach((evt) => window.removeEventListener(evt, resetIdleTimer));
+      window.removeEventListener('coffer:unauthorized', handleUnauthorized);
+    };
+  }, [user]);
 
   const login = async (email, password) => {
     setError(null);
