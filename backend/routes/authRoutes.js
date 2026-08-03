@@ -481,6 +481,34 @@ router.post('/reset-password', async (req, res) => {
   }
 });
 
+// GET /api/auth/verify-reset-token
+router.get('/verify-reset-token', async (req, res) => {
+  try {
+    const { token } = req.query;
+
+    if (!token) {
+      return res.status(400).json({ valid: false, error: 'Reset token is required.' });
+    }
+
+    const user = await prisma.user.findFirst({
+      where: {
+        resetToken: String(token),
+        resetTokenExpiry: { gt: new Date() },
+      },
+      select: { email: true },
+    });
+
+    if (!user) {
+      return res.status(400).json({ valid: false, error: 'Invalid or expired password reset token.' });
+    }
+
+    return res.status(200).json({ valid: true, email: user.email });
+  } catch (error) {
+    console.error('Verify Reset Token Error:', error);
+    return res.status(500).json({ valid: false, error: 'Internal server error during token verification.' });
+  }
+});
+
 // GET /api/auth/me
 router.get('/me', requireAuth, async (req, res) => {
   try {
