@@ -191,7 +191,11 @@ COFFER was engineered through a strict sequential 17-commit methodology:
 
 - **Keyboard Navigation**: Quick shortcut `⌘K` badge indicator in Navbar for swift workspace focus.
 - **Ledger Date Presets**: Quick filter chips (`This Month`, `Last 30 Days`, `This Year`, `All Ledger`) on the Transactions page.
-- **Interactive Security Meter**: Real-time password complexity checklist (8+ chars, uppercase, number, symbol) during user registration.
+- **Interactive Security Meter**: Real-time password complexity checklist (8+ chars, uppercase, number, symbol) during user registration and password reset.
+- **Password Management & Change Vault**: Integrated `POST /api/auth/change-password` endpoint and in-app Security modal in Settings.
+- **Reset Token Validation**: Pre-flight verification endpoint `GET /api/auth/verify-reset-token` for secure credential restoration.
+- **Brute-Force Rate Limiting**: In-memory IP rate limiter protecting sensitive authentication & password reset pathways.
+- **Idle Session Security**: 30-minute inactivity auto-logout protection for sensitive financial telemetry.
 - **Data Portability & Backup**: Download complete workspace ledger JSON backup directly from Settings.
 - **Analytics Distribution Ratios**: `heroStats` endpoint includes top category metrics and savings rate ratios.
 - **Budget Health Telemetry**: Enhanced utilization badges (`Exceeded`, `Near Limit`, `Safe`) with exact percentage indicators.
