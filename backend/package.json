@@ -1,6 +1,6 @@
 {
   "name": "coffer-backend",
-  "version": "1.0.0",
+  "version": "2.5.0",
   "description": "Backend API server for COFFER personal finance tracker",
   "main": "server.js",
   "type": "module",
