@@ -53,12 +53,24 @@ import transactionRoutes from './routes/transactionRoutes.js';
 import budgetRoutes from './routes/budgetRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
 
+// Core Feature Routes (Dual mounted for fail-safe Vercel & local routing)
 app.use('/api/auth', authRoutes);
+app.use('/auth', authRoutes);
+
 app.use('/api/accounts', accountRoutes);
+app.use('/accounts', accountRoutes);
+
 app.use('/api/categories', categoryRoutes);
+app.use('/categories', categoryRoutes);
+
 app.use('/api/transactions', transactionRoutes);
+app.use('/transactions', transactionRoutes);
+
 app.use('/api/budgets', budgetRoutes);
+app.use('/budgets', budgetRoutes);
+
 app.use('/api/analytics', analyticsRoutes);
+app.use('/analytics', analyticsRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {
