@@ -506,4 +506,49 @@ router.get('/me', requireAuth, async (req, res) => {
   }
 });
 
+// POST /api/auth/change-password
+router.post('/change-password', requireAuth, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: 'Current password and new password are required.' });
+    }
+
+    if (newPassword.length < 8) {
+      return res.status(400).json({ error: 'New password must be at least 8 characters long.' });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User account not found.' });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.passwordHash);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Current password is incorrect.' });
+    }
+
+    const passwordHash = await bcrypt.hash(newPassword, 10);
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { passwordHash },
+    });
+
+    // Invalidate existing sessions for security
+    await prisma.session.deleteMany({
+      where: { userId: user.id },
+    });
+
+    return res.status(200).json({ message: 'Password changed successfully. Please sign in again with your new password.' });
+  } catch (error) {
+    console.error('Change Password Error:', error);
+    return res.status(500).json({ error: 'Internal server error during password change.' });
+  }
+});
+
 export default router;
+
