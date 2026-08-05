@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
 import api from '../services/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import AppLayout from '../components/layout/AppLayout.jsx';
@@ -18,10 +19,10 @@ const CURRENCIES = [
 ];
 
 const Settings = () => {
-  const { user, setUser } = useAuth();
+  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [accounts, setAccounts] = useState([]);
-  const [error, setError] = useState('');
+  const [, setError] = useState('');
 
   // Account creation/editing state
   const [isEditingId, setIsEditingId] = useState(null);
@@ -75,10 +76,6 @@ const Settings = () => {
     }
   };
 
-  // Profile preferences state
-  const [profileCurrency, setProfileCurrency] = useState(user?.currency || '$ USD');
-  const [profileSaved, setProfileSaved] = useState(false);
-
   const fetchAccounts = async () => {
     setLoading(true);
     try {
@@ -93,9 +90,6 @@ const Settings = () => {
 
   useEffect(() => {
     fetchAccounts();
-    if (user?.currency) {
-      setProfileCurrency(user.currency);
-    }
   }, [user]);
 
   const handleChange = (e) => {
@@ -209,10 +203,10 @@ const Settings = () => {
     <AppLayout>
       {/* Top Header */}
       <div className="mb-8">
-        <h1 className="font-fraunces text-3xl font-medium tracking-tight text-ink">
+        <h1 className="font-fraunces text-3xl sm:text-4xl font-medium tracking-tight text-white drop-shadow-sm">
           Treasury & Workspace Settings
         </h1>
-        <p className="text-sm text-ink-muted font-sans">
+        <p className="text-sm text-ink-muted font-sans mt-1">
           Manage multi-currency financial accounts, modify initial balances, and configure workspace defaults.
         </p>
       </div>
@@ -220,36 +214,38 @@ const Settings = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left Column - Accounts Manager */}
         <div className="col-span-1 lg:col-span-8 space-y-6">
-          <div className="p-6 rounded-lg bg-surface border border-border shadow-2xs">
+          <div className="p-6 rounded-2xl glass-surface border border-white/10 shadow-xl">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="font-fraunces text-xl font-medium text-ink">
+                <h3 className="font-fraunces text-xl font-medium text-white">
                   Registered Treasury Accounts ({accounts.length})
                 </h3>
                 <p className="text-xs text-ink-muted font-sans">
                   Each account maintains its own independent running balance and currency token.
                 </p>
               </div>
-              <button
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
                 onClick={handleOpenCreate}
-                className="bg-brand hover:bg-brand-light text-white text-xs font-medium px-3.5 py-2 rounded-md transition-colors duration-150"
+                className="glass-btn text-white text-xs font-medium px-4 py-2 rounded-xl shadow-md"
               >
                 + New Account
-              </button>
+              </motion.button>
             </div>
 
             {/* Account Form / Editor Panel */}
             {(isEditingId !== null || formData.name !== '' || accounts.length === 0) && (
-              <form onSubmit={handleSaveAccount} className="p-4 rounded-lg bg-canvas border border-border mb-6 space-y-4 animate-fade-in">
-                <div className="flex items-center justify-between border-b border-border/50 pb-2">
-                  <span className="font-fraunces text-sm font-medium text-ink">
+              <form onSubmit={handleSaveAccount} className="p-5 rounded-xl bg-white/5 border border-white/15 mb-6 space-y-4">
+                <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                  <span className="font-fraunces text-base font-medium text-white">
                     {isEditingId ? 'Modify Treasury Account' : 'Initialize New Account'}
                   </span>
                   {isEditingId && (
                     <button
                       type="button"
                       onClick={handleOpenCreate}
-                      className="text-[11px] font-mono text-ink-muted hover:text-ink"
+                      className="text-xs font-mono text-ink-muted hover:text-white"
                     >
                       Cancel Edit ✕
                     </button>
@@ -257,7 +253,7 @@ const Settings = () => {
                 </div>
 
                 {formError && (
-                  <div className="p-2.5 rounded bg-negative/10 border border-negative/30 text-negative text-xs">
+                  <div className="p-3 rounded-lg bg-negative/20 border border-negative/40 text-negative text-xs">
                     {formError}
                   </div>
                 )}
@@ -274,7 +270,7 @@ const Settings = () => {
                       placeholder="e.g. Primary Checking or Amex Card"
                       value={formData.name}
                       onChange={handleChange}
-                      className="w-full rounded border border-border bg-surface px-3 py-2 text-xs text-ink focus:outline-none focus:border-brand"
+                      className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2 text-xs text-white focus:outline-none focus:border-brand-light"
                     />
                   </div>
 
@@ -287,10 +283,10 @@ const Settings = () => {
                       name="type"
                       value={formData.type}
                       onChange={handleChange}
-                      className="w-full rounded border border-border bg-surface px-3 py-2 text-xs font-medium text-ink focus:outline-none focus:border-brand"
+                      className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2 text-xs font-medium text-white focus:outline-none focus:border-brand-light"
                     >
                       {ACCOUNT_TYPES.map((t) => (
-                        <option key={t.value} value={t.value}>{t.label}</option>
+                        <option key={t.value} value={t.value} className="bg-slate-900 text-white">{t.label}</option>
                       ))}
                     </select>
                   </div>
@@ -306,10 +302,10 @@ const Settings = () => {
                       name="currency"
                       value={formData.currency}
                       onChange={handleChange}
-                      className="w-full rounded border border-border bg-surface px-3 py-2 text-xs font-mono text-ink focus:outline-none focus:border-brand"
+                      className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2 text-xs font-mono text-white focus:outline-none focus:border-brand-light"
                     >
                       {CURRENCIES.map((c) => (
-                        <option key={c} value={c}>{c}</option>
+                        <option key={c} value={c} className="bg-slate-900 text-white">{c}</option>
                       ))}
                     </select>
                   </div>
@@ -327,10 +323,10 @@ const Settings = () => {
                       placeholder="0.00"
                       value={formData.initialBalance}
                       onChange={handleChange}
-                      className="w-full rounded border border-border bg-surface px-3 py-2 text-xs font-mono tabular-nums text-ink focus:outline-none focus:border-brand disabled:opacity-50"
+                      className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2 text-xs font-mono tabular-nums text-white focus:outline-none focus:border-brand-light disabled:opacity-50"
                     />
                     {isEditingId && (
-                      <span className="text-[10px] text-ink-muted/80">
+                      <span className="text-[10px] text-ink-muted/80 mt-1 block">
                         Running balance is dynamically derived from transactions.
                       </span>
                     )}
@@ -338,13 +334,15 @@ const Settings = () => {
                 </div>
 
                 <div className="flex justify-end pt-2">
-                  <button
+                  <motion.button
                     type="submit"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     disabled={submitting}
-                    className="bg-brand hover:bg-brand-light text-white px-4 py-2 rounded text-xs font-medium shadow-2xs transition-colors duration-150"
+                    className="glass-btn text-white px-5 py-2.5 rounded-xl text-xs font-medium shadow-md"
                   >
                     {submitting ? 'Saving...' : isEditingId ? 'Update Account' : 'Create Account'}
-                  </button>
+                  </motion.button>
                 </div>
               </form>
             )}
@@ -359,20 +357,20 @@ const Settings = () => {
                 description="Initialize your first checking or savings account above to record cash flows."
               />
             ) : (
-              <div className="divide-y divide-border/60">
+              <div className="divide-y divide-white/10">
                 {accounts.map((acc) => (
                   <div
                     key={acc.id}
-                    className="py-4 flex items-center justify-between gap-4 hover:bg-canvas/40 px-3 rounded-lg transition-colors duration-150"
+                    className="py-4 flex items-center justify-between gap-4 hover:bg-white/5 px-3 rounded-xl transition-all duration-150"
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-canvas border border-border flex items-center justify-center font-mono text-xs font-bold text-brand shrink-0">
+                    <div className="flex items-center gap-3.5">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand/30 to-brand-light/20 border border-brand-light/30 flex items-center justify-center font-mono text-xs font-bold text-brand-light shrink-0 shadow-sm">
                         {acc.type === 'CREDIT_CARD' ? 'CC' : acc.type === 'SAVINGS' ? 'SV' : 'CH'}
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-semibold text-ink text-sm">{acc.name}</span>
-                          <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-canvas text-ink-muted">
+                          <span className="font-semibold text-white text-sm">{acc.name}</span>
+                          <span className="font-mono text-[10px] px-2 py-0.5 rounded-full bg-white/10 border border-white/10 text-brand-light">
                             {acc.currency}
                           </span>
                         </div>
@@ -384,9 +382,9 @@ const Settings = () => {
 
                     <div className="flex items-center gap-6">
                       <div className="text-right font-mono tabular-nums">
-                        <span className="block text-xs text-ink-muted">Running Balance</span>
-                        <span className={`text-sm font-semibold ${
-                          acc.runningBalance < 0 ? 'text-negative' : 'text-ink'
+                        <span className="block text-[10px] uppercase text-ink-muted">Running Balance</span>
+                        <span className={`text-base font-semibold ${
+                          acc.runningBalance < 0 ? 'text-negative' : 'text-white'
                         }`}>
                           ${acc.runningBalance.toFixed(2)}
                         </span>
@@ -395,14 +393,14 @@ const Settings = () => {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleOpenEdit(acc)}
-                          className="text-xs font-mono text-ink hover:text-brand px-2 py-1 rounded border border-border bg-surface hover:bg-canvas transition-colors duration-150"
+                          className="text-xs font-mono text-white hover:text-brand-light px-3 py-1.5 rounded-lg border border-white/15 bg-white/5 hover:bg-white/10 transition-all"
                         >
                           Edit
                         </button>
                         {accounts.length > 1 && (
                           <button
                             onClick={() => handleDeleteAccount(acc.id, acc.name)}
-                            className="text-xs font-mono text-negative hover:bg-negative/10 px-2 py-1 rounded transition-colors duration-150"
+                            className="text-xs font-mono text-negative hover:bg-negative/20 px-2.5 py-1.5 rounded-lg border border-negative/30 transition-all"
                             title="Delete account"
                           >
                             ✕
@@ -417,10 +415,10 @@ const Settings = () => {
           </div>
         </div>
 
-        {/* Right Column - User Profile & System Specifications */}
+        {/* Right Column - User Credentials & System Diagnostics */}
         <div className="col-span-1 lg:col-span-4 space-y-6">
-          <div className="p-6 rounded-lg bg-surface border border-border shadow-2xs">
-            <h3 className="font-fraunces text-xl font-medium text-ink mb-1">
+          <div className="p-6 rounded-2xl glass-surface border border-white/10 shadow-xl">
+            <h3 className="font-fraunces text-xl font-medium text-white mb-1">
               User Credentials
             </h3>
             <p className="text-xs text-ink-muted font-sans mb-5">
@@ -429,29 +427,31 @@ const Settings = () => {
 
             {user && (
               <div className="space-y-4 font-sans text-xs">
-                <div>
-                  <span className="block font-mono text-[10px] uppercase text-ink-muted">Display Name</span>
-                  <span className="font-semibold text-ink text-sm">{user.displayName || 'Treasury Officer'}</span>
+                <div className="p-3 rounded-xl bg-white/5 border border-white/5">
+                  <span className="block font-mono text-[10px] uppercase text-ink-muted mb-0.5">Display Name</span>
+                  <span className="font-semibold text-white text-sm">{user.displayName || 'Treasury Officer'}</span>
+                </div>
+
+                <div className="p-3 rounded-xl bg-white/5 border border-white/5">
+                  <span className="block font-mono text-[10px] uppercase text-ink-muted mb-0.5">Email Address</span>
+                  <span className="font-mono text-white text-xs">{user.email}</span>
                 </div>
 
                 <div>
-                  <span className="block font-mono text-[10px] uppercase text-ink-muted">Email Address</span>
-                  <span className="font-mono text-ink text-xs">{user.email}</span>
-                </div>
-
-                <div>
-                  <span className="block font-mono text-[10px] uppercase text-ink-muted mb-1.5">Data Portability</span>
-                  <button
+                  <span className="block font-mono text-[10px] uppercase text-ink-muted mb-2">Data Portability</span>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={handleExportJSON}
-                    className="w-full bg-surface hover:bg-canvas text-ink border border-border font-medium py-2 px-3 rounded text-xs transition-colors duration-150 flex items-center justify-center gap-2 mb-4"
+                    className="w-full glass-btn-secondary font-medium py-2.5 px-3 rounded-xl text-xs transition-all flex items-center justify-center gap-2 mb-4"
                   >
                     <span>💾 Export Complete Ledger JSON</span>
-                  </button>
+                  </motion.button>
                 </div>
 
-                {/* Change Password Card Section */}
-                <div className="border-t border-border pt-4">
-                  <h4 className="font-fraunces text-sm font-medium text-ink mb-1">
+                {/* Change Password Section */}
+                <div className="border-t border-white/10 pt-4">
+                  <h4 className="font-fraunces text-base font-medium text-white mb-1">
                     Security & Passphrase
                   </h4>
                   <p className="text-[11px] text-ink-muted mb-3">
@@ -459,10 +459,10 @@ const Settings = () => {
                   </p>
 
                   {showChangePassword ? (
-                    <form onSubmit={handleChangePasswordSubmit} className="space-y-3 p-3 rounded-lg bg-canvas border border-border">
+                    <form onSubmit={handleChangePasswordSubmit} className="space-y-3 p-4 rounded-xl bg-black/40 border border-white/15">
                       {pwdMessage.text && (
-                        <div className={`p-2 rounded text-xs ${
-                          pwdMessage.type === 'error' ? 'bg-negative/10 border border-negative/30 text-negative' : 'bg-positive/10 border border-positive/30 text-positive'
+                        <div className={`p-2.5 rounded-lg text-xs ${
+                          pwdMessage.type === 'error' ? 'bg-negative/20 border border-negative/40 text-negative' : 'bg-positive/20 border border-positive/40 text-positive'
                         }`}>
                           {pwdMessage.text}
                         </div>
@@ -475,7 +475,7 @@ const Settings = () => {
                           required
                           value={pwdForm.currentPassword}
                           onChange={(e) => setPwdForm({ ...pwdForm, currentPassword: e.target.value })}
-                          className="w-full rounded border border-border bg-surface px-2.5 py-1.5 text-xs text-ink focus:outline-none focus:border-brand"
+                          className="w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-light"
                         />
                       </div>
 
@@ -486,7 +486,7 @@ const Settings = () => {
                           required
                           value={pwdForm.newPassword}
                           onChange={(e) => setPwdForm({ ...pwdForm, newPassword: e.target.value })}
-                          className="w-full rounded border border-border bg-surface px-2.5 py-1.5 text-xs text-ink focus:outline-none focus:border-brand"
+                          className="w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-light"
                         />
                       </div>
 
@@ -497,7 +497,7 @@ const Settings = () => {
                           required
                           value={pwdForm.confirmPassword}
                           onChange={(e) => setPwdForm({ ...pwdForm, confirmPassword: e.target.value })}
-                          className="w-full rounded border border-border bg-surface px-2.5 py-1.5 text-xs text-ink focus:outline-none focus:border-brand"
+                          className="w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-light"
                         />
                       </div>
 
@@ -505,27 +505,29 @@ const Settings = () => {
                         <button
                           type="button"
                           onClick={() => { setShowChangePassword(false); setPwdMessage({ type: '', text: '' }); }}
-                          className="text-xs px-2.5 py-1 rounded border border-border text-ink-muted hover:text-ink"
+                          className="text-xs px-3 py-1.5 rounded-lg border border-white/15 text-ink-muted hover:text-white"
                         >
                           Cancel
                         </button>
                         <button
                           type="submit"
                           disabled={pwdSubmitting}
-                          className="text-xs px-3 py-1 rounded bg-brand text-white font-medium hover:bg-brand-light disabled:opacity-50"
+                          className="text-xs px-3.5 py-1.5 rounded-lg bg-brand text-white font-medium hover:bg-brand-light disabled:opacity-50"
                         >
                           {pwdSubmitting ? 'Updating...' : 'Update Passphrase'}
                         </button>
                       </div>
                     </form>
                   ) : (
-                    <button
+                    <motion.button
                       type="button"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                       onClick={() => setShowChangePassword(true)}
-                      className="w-full bg-brand/5 hover:bg-brand/10 text-brand border border-brand/20 font-medium py-2 px-3 rounded text-xs transition-colors duration-150 flex items-center justify-center gap-2"
+                      className="w-full glass-btn-secondary font-medium py-2.5 px-3 rounded-xl text-xs transition-all flex items-center justify-center gap-2"
                     >
                       <span>🔒 Change Vault Password</span>
-                    </button>
+                    </motion.button>
                   )}
                 </div>
               </div>
@@ -533,29 +535,34 @@ const Settings = () => {
           </div>
 
           {/* System Diagnostics Box */}
-          <div className="p-6 rounded-lg bg-ink text-canvas border border-ink shadow-sm space-y-3 font-mono text-xs">
-            <div className="flex items-center justify-between border-b border-border/20 pb-2">
-              <span className="font-bold text-brand-light">COFFER DIAGNOSTICS</span>
-              <span className="text-positive">● ONLINE</span>
+          <div className="p-6 rounded-2xl glass-card text-white border border-white/15 shadow-xl space-y-4 font-mono text-xs">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <span className="font-bold text-brand-light flex items-center gap-2">
+                <span>COFFER DIAGNOSTICS</span>
+              </span>
+              <span className="text-positive flex items-center gap-1.5 text-[11px]">
+                <span className="w-2 h-2 rounded-full bg-positive animate-pulse" />
+                ONLINE
+              </span>
             </div>
-            <div className="space-y-1 text-[11px] opacity-80">
-              <p>Core Engine: v2.4.0-stable</p>
+            <div className="space-y-1.5 text-[11px] opacity-80">
+              <p>Core Engine: v2.5.0-glass</p>
               <p>Deployment: Vercel Edge / Serverless</p>
               <p>Database: SQLite / Prisma ORM</p>
               <p>Active Session ID: {user?.id ? user.id.slice(0, 8) : 'demo-session'}...</p>
             </div>
-            <div className="space-y-1.5 text-[11px] text-ink-muted border-t border-border/20 pt-2">
+            <div className="space-y-2 text-[11px] text-ink-muted border-t border-white/10 pt-3">
               <div className="flex justify-between">
                 <span>DATABASE ENGINE:</span>
-                <span className="text-canvas">SQLite (dev.db)</span>
+                <span className="text-white">SQLite (dev.db)</span>
               </div>
               <div className="flex justify-between">
                 <span>PRISMA SCHEMA:</span>
-                <span className="text-canvas">PostgreSQL Compatible</span>
+                <span className="text-white">PostgreSQL Compatible</span>
               </div>
               <div className="flex justify-between">
                 <span>TYPOGRAPHY:</span>
-                <span className="text-canvas">Fraunces + Tabular Mono</span>
+                <span className="text-white">Fraunces + Tabular Mono</span>
               </div>
               <div className="flex justify-between">
                 <span>API LATENCY:</span>

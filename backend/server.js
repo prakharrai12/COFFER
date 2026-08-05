@@ -6,7 +6,7 @@ dotenv.config();
 const PORT = process.env.PORT || 5000;
 
 if (!process.env.VERCEL && process.env.NODE_ENV !== 'production') {
-  app.listen(PORT, () => {
+  app.listen(PORT, '0.0.0.0', () => {
     console.log(`COFFER Backend API Server running on port ${PORT}`);
   });
 }

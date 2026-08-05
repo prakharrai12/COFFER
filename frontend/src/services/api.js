@@ -1,9 +1,10 @@
 const getBaseUrl = () => {
   if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
-  if (typeof window !== 'undefined' && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')) {
-    return `${window.location.origin}/api`;
+  if (typeof window !== 'undefined') {
+    // Relative /api route leverages Vite dev proxy in local dev and Vercel rewriting in production
+    return '/api';
   }
-  return 'http://localhost:5000/api';
+  return 'http://127.0.0.1:5000/api';
 };
 
 const BASE_URL = getBaseUrl();
