@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import api from '../../services/api.js';
 import FloatingInput from '../../components/common/FloatingInput.jsx';
 import PasswordStrengthMeter from '../../components/auth/PasswordStrengthMeter.jsx';
+import AnimatedGradient from '../../components/ui/animated-gradient';
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -70,30 +71,34 @@ const ResetPassword = () => {
 
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-12 bg-canvas">
-      <div className="hidden lg:flex lg:col-span-5 bg-ink text-canvas p-12 flex-col justify-between border-r border-border/20 relative overflow-hidden">
-        <div className="relative z-10">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded bg-brand flex items-center justify-center font-mono font-bold text-xs text-white">
-              C
+      <div className="hidden lg:flex lg:col-span-5 relative overflow-hidden">
+        <AnimatedGradient config={{ preset: "Vault", speed: 6 }} noise={{ opacity: 0.08, scale: 1 }} />
+
+        <div className="relative z-10 h-full w-full flex flex-col justify-between p-12 text-canvas">
+          <div>
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded bg-brand flex items-center justify-center font-mono font-bold text-xs text-white">
+                C
+              </div>
+              <span className="font-mono text-xs font-semibold tracking-[0.2em] uppercase text-canvas/60">
+                COFFER VAULT
+              </span>
             </div>
-            <span className="font-mono text-xs font-semibold tracking-[0.2em] uppercase text-ink-muted">
-              COFFER VAULT
-            </span>
           </div>
-        </div>
 
-        <div className="relative z-10 my-auto py-12">
-          <h1 className="font-fraunces text-4xl xl:text-5xl font-light leading-[1.15] tracking-tight mb-6 text-canvas">
-            Establish new passphrase.
-          </h1>
-          <p className="text-ink-muted text-base leading-relaxed font-sans max-w-md">
-            Choose a strong passphrase with at least 8 characters to restore access and secure encrypted ledger states.
-          </p>
-        </div>
+          <div className="my-auto py-12">
+            <h1 className="font-fraunces text-4xl xl:text-5xl font-light leading-[1.15] tracking-tight mb-6 text-canvas">
+              Establish new passphrase.
+            </h1>
+            <p className="text-canvas/60 text-base leading-relaxed font-sans max-w-md">
+              Choose a strong passphrase with at least 8 characters to restore access and secure encrypted ledger states.
+            </p>
+          </div>
 
-        <div className="relative z-10 text-xs font-mono text-ink-muted flex justify-between border-t border-border/10 pt-6">
-          <span>COFFER v1.0 • LOCAL DEV</span>
-          <span>CREDENTIAL ROTATION</span>
+          <div className="text-xs font-mono text-canvas/40 flex justify-between border-t border-white/10 pt-6">
+            <span>COFFER v1.0 • LOCAL DEV</span>
+            <span>CREDENTIAL ROTATION</span>
+          </div>
         </div>
       </div>
 
