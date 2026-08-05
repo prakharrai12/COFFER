@@ -6,17 +6,19 @@
 @tailwind utilities;
 
 :root {
-  --ink: #10140F;
-  --ink-muted: #5B6158;
-  --canvas: #F6F4EE;
-  --surface: #FFFFFF;
-  --surface-raised: #FBFAF6;
-  --border: #E4E1D6;
-  --brand: #1F5F4D;
-  --accent: #B8863B;
-  --positive: #2E8B57;
-  --negative: #B0452F;
-  --warning: #C08A2E;
+  --ink: #F3F4F6;
+  --ink-muted: #9CA3AF;
+  --canvas: #090C0A;
+  --surface: #111613;
+  --surface-raised: #18201C;
+  --border: rgba(255, 255, 255, 0.12);
+  --brand: #2D8A70;
+  --brand-light: #3FA37F;
+  --brand-dark: #1F5F4D;
+  --accent: #38BDF8;
+  --positive: #34D399;
+  --negative: #F87171;
+  --warning: #FBBF24;
 
   --ease-coffer-in: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-coffer-out: cubic-bezier(0.65, 0, 0.35, 1);
@@ -28,18 +30,20 @@
   --dur-hero: 600ms;
 }
 
-.dark {
-  --ink: #EDEBE3;
-  --ink-muted: #9A9E93;
-  --canvas: #0E1210;
-  --surface: #161B17;
-  --surface-raised: #1D231E;
-  --border: #262D26;
-  --brand: #3FA37F;
-  --accent: #D3A55C;
-  --positive: #4CC38A;
-  --negative: #E27158;
-  --warning: #DDA94B;
+.light {
+  --ink: #0F172A;
+  --ink-muted: #475569;
+  --canvas: #F8FAFC;
+  --surface: #FFFFFF;
+  --surface-raised: #F1F5F9;
+  --border: rgba(15, 23, 42, 0.12);
+  --brand: #1F5F4D;
+  --brand-light: #2D8A70;
+  --brand-dark: #144033;
+  --accent: #0284C7;
+  --positive: #059669;
+  --negative: #DC2626;
+  --warning: #D97706;
 }
 
 @layer base {
@@ -47,7 +51,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-canvas text-ink font-sans antialiased selection:bg-brand selection:text-white;
+    @apply bg-canvas text-ink font-sans antialiased selection:bg-brand selection:text-white min-h-screen overflow-x-hidden;
     margin: 0;
     padding: 0;
   }
@@ -70,11 +74,98 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--border);
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--ink-muted);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Glass surface effects for dashboard cards and panels */
+.glass-surface {
+  background: rgba(17, 22, 19, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-surface-interactive {
+  background: rgba(17, 22, 19, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.glass-surface-interactive:hover {
+  background: rgba(24, 32, 28, 0.8);
+  border-color: rgba(63, 163, 127, 0.4);
+  box-shadow: 0 12px 40px 0 rgba(45, 138, 112, 0.25), 0 0 15px rgba(63, 163, 127, 0.2);
+  transform: translateY(-2px);
+}
+
+.glass-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.15), 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.glass-ink {
+  background: rgba(9, 12, 10, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(63, 163, 127, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Glowing Interactive Button */
+.glass-btn {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(45, 138, 112, 0.85) 0%, rgba(31, 95, 77, 0.95) 100%);
+  border: 1px solid rgba(63, 163, 127, 0.5);
+  box-shadow: 0 4px 20px rgba(45, 138, 112, 0.35);
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.glass-btn:hover {
+  background: linear-gradient(135deg, rgba(63, 163, 127, 0.95) 0%, rgba(45, 138, 112, 1) 100%);
+  border-color: rgba(52, 211, 153, 0.8);
+  box-shadow: 0 6px 28px rgba(63, 163, 127, 0.55), 0 0 15px rgba(52, 211, 153, 0.4);
+}
+
+/* Secondary Translucent Glass Button */
+.glass-btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--ink);
+  transition: all 0.2s ease;
+}
+.glass-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(63, 163, 127, 0.4);
+  box-shadow: 0 0 15px rgba(63, 163, 127, 0.2);
+}
+
+/* Paper grain texture overlay — applied via ::after pseudo-element */
+.grain-overlay {
+  position: relative;
+}
+.grain-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+  mix-blend-mode: overlay;
+  z-index: 1;
 }
 
 /* Reduced motion overrides for accessibility */
