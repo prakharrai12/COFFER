@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'motion/react';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
 import api from '../services/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import AppLayout from '../components/layout/AppLayout.jsx';
 import AnimatedCurrency from '../components/common/AnimatedCurrency.jsx';
-import { HeroStatsSkeleton, CardSkeleton } from '../components/common/Skeletons.jsx';
+import { HeroStatsSkeleton } from '../components/common/Skeletons.jsx';
 import EmptyState from '../components/common/EmptyState.jsx';
 
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (
-      <div className="bg-ink text-canvas px-3 py-2 rounded shadow-md border border-border/20 text-xs font-mono">
+      <div className="bg-surface/90 backdrop-blur-xl text-white px-3 py-2 rounded-lg shadow-xl border border-white/20 text-xs font-mono">
         <p className="font-semibold">{data.name}</p>
-        <p className="text-canvas/80">${data.value.toFixed(2)} ({data.percentage}%)</p>
+        <p className="text-brand-light">${data.value.toFixed(2)} ({data.percentage}%)</p>
       </div>
     );
   }
@@ -75,67 +76,73 @@ const Dashboard = () => {
     <AppLayout>
       {/* Demo Treasury Mode Banner */}
       {user?.email === 'demo@coffer.app' && (
-        <div className="mb-6 p-4 rounded-xl bg-brand/10 border border-brand/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm">
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6 p-4 rounded-2xl glass-surface border border-brand-light/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg"
+        >
           <div className="flex items-center gap-3">
-            <span className="w-8 h-8 rounded-lg bg-brand text-white flex items-center justify-center font-mono font-bold text-sm shrink-0">
+            <span className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-light to-brand-dark text-white flex items-center justify-center font-mono font-bold text-sm shrink-0 shadow-[0_0_15px_rgba(63,163,127,0.4)]">
               ⚡
             </span>
             <div>
-              <p className="text-xs font-mono font-bold text-brand uppercase tracking-wider">
-                Demo Treasury Mode Active • Alex Mercer
+              <p className="text-xs font-mono font-bold text-brand-light uppercase tracking-wider flex items-center gap-2">
+                <span>Demo Treasury Mode Active</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-light animate-ping" />
               </p>
               <p className="text-xs text-ink-muted leading-relaxed">
-                You are inspecting live pre-seeded financial accounts, categories, and monthly cashflows.
+                Inspecting live pre-seeded financial accounts, categories, and monthly cashflows.
               </p>
             </div>
           </div>
-          <button
+          <motion.button
             type="button"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
             onClick={handleReseedDemo}
             disabled={reseeing}
-            className="bg-surface hover:bg-brand/10 text-brand border border-brand/30 px-3.5 py-2 rounded-lg text-xs font-sans font-medium transition-all duration-200 shrink-0 flex items-center gap-1.5 shadow-sm min-h-[38px]"
+            className="glass-btn-secondary px-4 py-2 rounded-xl text-xs font-sans font-medium shrink-0 flex items-center gap-1.5 min-h-[38px]"
           >
             {reseeing ? (
               <span>Reseeding Vault...</span>
             ) : (
               <span>↻ Reset Demo Ledger Data</span>
             )}
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
       )}
 
       {/* Top Header & Month Filter */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="font-fraunces text-3xl font-medium tracking-tight text-ink">
+          <h1 className="font-fraunces text-3xl sm:text-4xl font-medium tracking-tight text-white drop-shadow-sm">
             {getGreeting()}, {user?.displayName ? user.displayName.split(' ')[0] : 'Treasury Manager'}
           </h1>
-          <p className="text-sm text-ink-muted font-sans mt-0.5">
+          <p className="text-sm text-ink-muted font-sans mt-1">
             Live net worth aggregation and budget telemetry for your active ledger.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <button
+          <motion.button
             type="button"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => setCurrentMonth(new Date().toISOString().slice(0, 7))}
-            className={`px-2.5 py-1.5 rounded text-xs font-mono transition-colors ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-mono transition-all border ${
               currentMonth === new Date().toISOString().slice(0, 7)
-                ? 'bg-brand text-white font-semibold'
-                : 'bg-surface border border-border text-ink-muted hover:text-ink'
+                ? 'bg-gradient-to-r from-brand-dark to-brand-light text-white font-semibold border-white/20 shadow-[0_0_12px_rgba(63,163,127,0.4)]'
+                : 'glass-surface border-white/10 text-ink-muted hover:text-white'
             }`}
           >
             Current Month
-          </button>
-          <label htmlFor="monthSelect" className="text-xs font-mono uppercase text-ink-muted hidden sm:inline">
-            Period:
-          </label>
+          </motion.button>
           <input
             id="monthSelect"
             type="month"
             value={currentMonth}
             onChange={(e) => setCurrentMonth(e.target.value)}
-            className="bg-surface border border-border rounded-md px-3 py-1.5 text-xs font-mono text-ink focus:outline-none focus:border-brand shadow-2xs"
+            className="glass-surface border border-white/15 rounded-xl px-3 py-1.5 text-xs font-mono text-white focus:outline-none focus:border-brand-light shadow-inner"
           />
         </div>
       </div>
@@ -144,86 +151,108 @@ const Dashboard = () => {
       {loading ? (
         <HeroStatsSkeleton />
       ) : error ? (
-        <div className="p-6 rounded-lg bg-negative/10 border border-negative/30 text-negative text-sm mb-8">
+        <div className="p-6 rounded-2xl bg-negative/20 border border-negative/40 text-negative text-sm mb-8 backdrop-blur-md">
           {error}
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            {/* Net Worth Hero */}
-            <div className="p-6 rounded-lg bg-ink text-canvas border border-ink shadow-sm hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+            {/* Net Worth Hero Card */}
+            <motion.div
+              whileHover={{ y: -4, scale: 1.01 }}
+              transition={{ duration: 0.2 }}
+              className="p-6 rounded-2xl glass-ink grain-overlay text-white border border-brand-light/30 shadow-xl flex flex-col justify-between relative overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 w-32 h-32 bg-brand-light/10 rounded-full blur-2xl pointer-events-none" />
               <div>
-                <span className="text-[11px] font-mono tracking-wider uppercase text-ink-muted">
+                <span className="text-[11px] font-mono tracking-wider uppercase text-brand-light font-semibold">
                   Total Net Worth
                 </span>
-                <div className="font-fraunces text-3xl xl:text-4xl font-light tracking-tight mt-1 text-canvas">
+                <div className="font-fraunces text-3xl xl:text-4xl font-light tracking-tight mt-2 text-white">
                   <AnimatedCurrency value={data.heroStats.netWorth} currency={currency} />
                 </div>
               </div>
-              <div className="mt-4 pt-3 border-t border-border/10 flex items-center justify-between text-[11px] font-mono text-ink-muted">
+              <div className="mt-6 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-ink-muted">
                 <span>LIQUID ASSETS</span>
-                <span className="text-positive">● ACTIVE</span>
+                <span className="text-positive flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-positive animate-pulse" />
+                  ACTIVE
+                </span>
               </div>
-            </div>
+            </motion.div>
 
             {/* Total Income */}
-            <div className="p-6 rounded-lg bg-surface border border-border shadow-2xs hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <motion.div
+              whileHover={{ y: -4, scale: 1.01 }}
+              transition={{ duration: 0.2 }}
+              className="p-6 rounded-2xl glass-surface-interactive grain-overlay border border-white/10 flex flex-col justify-between"
+            >
               <div>
                 <span className="text-[11px] font-mono tracking-wider uppercase text-ink-muted">
                   Period Inflow
                 </span>
-                <div className="font-fraunces text-2xl xl:text-3xl font-light tracking-tight mt-1 text-positive">
+                <div className="font-fraunces text-2xl xl:text-3xl font-light tracking-tight mt-2 text-positive">
                   <AnimatedCurrency value={data.heroStats.totalIncome} currency={currency} showSign />
                 </div>
               </div>
-              <div className="mt-4 text-xs text-ink-muted font-sans">
+              <div className="mt-6 text-xs text-ink-muted font-sans">
                 Logged income credits for {data.month}
               </div>
-            </div>
+            </motion.div>
 
             {/* Total Spend */}
-            <div className="p-6 rounded-lg bg-surface border border-border shadow-2xs hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <motion.div
+              whileHover={{ y: -4, scale: 1.01 }}
+              transition={{ duration: 0.2 }}
+              className="p-6 rounded-2xl glass-surface-interactive grain-overlay border border-white/10 flex flex-col justify-between"
+            >
               <div>
                 <span className="text-[11px] font-mono tracking-wider uppercase text-ink-muted">
                   Period Outflow
                 </span>
-                <div className="font-fraunces text-2xl xl:text-3xl font-light tracking-tight mt-1 text-ink">
+                <div className="font-fraunces text-2xl xl:text-3xl font-light tracking-tight mt-2 text-white">
                   <AnimatedCurrency value={data.heroStats.totalSpend} currency={currency} />
                 </div>
               </div>
-              <div className="mt-4 text-xs text-ink-muted font-sans">
+              <div className="mt-6 text-xs text-ink-muted font-sans">
                 Categorized expenses & bills
               </div>
-            </div>
+            </motion.div>
 
             {/* Net Savings / Cashflow */}
-            <div className="p-6 rounded-lg bg-surface border border-border shadow-2xs flex flex-col justify-between">
+            <motion.div
+              whileHover={{ y: -4, scale: 1.01 }}
+              transition={{ duration: 0.2 }}
+              className="p-6 rounded-2xl glass-surface-interactive grain-overlay border border-white/10 flex flex-col justify-between"
+            >
               <div>
                 <span className="text-[11px] font-mono tracking-wider uppercase text-ink-muted">
                   Net Period Cashflow
                 </span>
-                <div className={`font-fraunces text-2xl xl:text-3xl font-light tracking-tight mt-1 ${
+                <div className={`font-fraunces text-2xl xl:text-3xl font-light tracking-tight mt-2 ${
                   data.heroStats.net >= 0 ? 'text-positive' : 'text-negative'
                 }`}>
                   <AnimatedCurrency value={data.heroStats.net} currency={currency} showSign />
                 </div>
               </div>
-              <div className="mt-4 text-xs text-ink-muted font-sans">
+              <div className="mt-6 text-xs text-ink-muted font-sans">
                 {data.heroStats.net >= 0 ? 'Surplus cashflow buffer' : 'Deficit outflow requiring adjustment'}
               </div>
-            </div>
+            </motion.div>
           </div>
 
           {/* Charts & Budgets Row */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
             {/* Donut Chart - Spend Breakdown */}
-            <div className="col-span-1 lg:col-span-6 p-6 rounded-lg bg-surface border border-border shadow-2xs flex flex-col">
+            <div className="col-span-1 lg:col-span-6 p-6 rounded-2xl glass-surface grain-overlay border border-white/10 flex flex-col">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h3 className="font-fraunces text-lg font-medium text-ink">Outflow Allocation</h3>
+                  <h3 className="font-fraunces text-xl font-medium text-white">Outflow Allocation</h3>
                   <p className="text-xs text-ink-muted font-sans">Expense distribution across active categories</p>
                 </div>
-                <span className="font-mono text-xs text-ink-muted">{data.spendByCategory.length} categories</span>
+                <span className="font-mono text-xs text-brand-light px-2.5 py-1 rounded-full border border-brand-light/30 bg-brand/10">
+                  {data.spendByCategory.length} categories
+                </span>
               </div>
 
               {data.spendByCategory.length === 0 ? (
@@ -236,7 +265,7 @@ const Dashboard = () => {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center my-auto">
-                  <div className="h-52 w-full">
+                  <div className="h-56 w-full relative">
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
                         <Pie
@@ -245,12 +274,12 @@ const Dashboard = () => {
                           nameKey="name"
                           cx="50%"
                           cy="50%"
-                          innerRadius={54}
-                          outerRadius={80}
-                          paddingAngle={3}
+                          innerRadius={56}
+                          outerRadius={84}
+                          paddingAngle={4}
                         >
                           {data.spendByCategory.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color || '#1F5F4D'} />
+                            <Cell key={`cell-${index}`} fill={entry.color || '#3FA37F'} stroke="rgba(0,0,0,0.5)" strokeWidth={2} />
                           ))}
                         </Pie>
                         <Tooltip content={<CustomTooltip />} />
@@ -258,12 +287,12 @@ const Dashboard = () => {
                     </ResponsiveContainer>
                   </div>
 
-                  <div className="space-y-2.5 max-h-52 overflow-y-auto pr-2">
+                  <div className="space-y-3 max-h-56 overflow-y-auto pr-2">
                     {data.spendByCategory.map((cat) => (
-                      <div key={cat.id} className="flex items-center justify-between text-xs">
-                        <div className="flex items-center gap-2 truncate pr-2">
-                          <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: cat.color }} />
-                          <span className="font-medium text-ink truncate">{cat.name}</span>
+                      <div key={cat.id} className="flex items-center justify-between text-xs p-2 rounded-lg bg-white/5 border border-white/5 hover:border-white/15 transition-all">
+                        <div className="flex items-center gap-2.5 truncate pr-2">
+                          <span className="w-3 h-3 rounded-full shrink-0 shadow-sm" style={{ backgroundColor: cat.color }} />
+                          <span className="font-medium text-white truncate">{cat.name}</span>
                         </div>
                         <div className="font-mono tabular-nums shrink-0 text-ink-muted">
                           ${cat.value.toFixed(2)} ({cat.percentage}%)
@@ -276,13 +305,13 @@ const Dashboard = () => {
             </div>
 
             {/* Budget Progress Bars */}
-            <div className="col-span-1 lg:col-span-6 p-6 rounded-lg bg-surface border border-border shadow-2xs flex flex-col">
+            <div className="col-span-1 lg:col-span-6 p-6 rounded-2xl glass-surface grain-overlay border border-white/10 flex flex-col">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h3 className="font-fraunces text-lg font-medium text-ink">Budget Telemetry</h3>
+                  <h3 className="font-fraunces text-xl font-medium text-white">Budget Telemetry</h3>
                   <p className="text-xs text-ink-muted font-sans">Monthly category limits vs spent progression</p>
                 </div>
-                <Link to="/budgets" className="text-xs font-mono text-brand hover:underline">
+                <Link to="/budgets" className="text-xs font-mono text-brand-light hover:underline flex items-center gap-1">
                   Configure Limits →
                 </Link>
               </div>
@@ -301,22 +330,22 @@ const Dashboard = () => {
                 <div className="space-y-5 my-auto max-h-64 overflow-y-auto pr-2">
                   {data.budgetSummary.map((b) => {
                     const barBg = b.status === 'danger'
-                      ? 'bg-negative'
+                      ? 'bg-gradient-to-r from-red-600 to-negative shadow-[0_0_12px_rgba(248,113,113,0.5)]'
                       : b.status === 'warning'
-                      ? 'bg-warning'
-                      : 'bg-brand';
+                      ? 'bg-gradient-to-r from-amber-600 to-warning shadow-[0_0_12px_rgba(251,191,36,0.5)]'
+                      : 'bg-gradient-to-r from-brand-dark to-brand-light shadow-[0_0_12px_rgba(63,163,127,0.5)]';
 
                     const percentClamped = Math.min(b.percentage, 100);
 
                     return (
-                      <div key={b.id} className="space-y-1.5">
+                      <div key={b.id} className="space-y-2 p-2.5 rounded-xl bg-white/5 border border-white/5">
                         <div className="flex justify-between items-center text-xs">
                           <div className="flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: b.categoryColor }} />
-                            <span className="font-medium text-ink">{b.categoryName}</span>
+                            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: b.categoryColor }} />
+                            <span className="font-medium text-white">{b.categoryName}</span>
                           </div>
                           <div className="font-mono tabular-nums text-ink-muted">
-                            <span className={b.status === 'danger' ? 'text-negative font-semibold' : 'text-ink'}>
+                            <span className={b.status === 'danger' ? 'text-negative font-semibold' : 'text-white'}>
                               ${b.spent.toFixed(2)}
                             </span>
                             {' / '}
@@ -325,7 +354,7 @@ const Dashboard = () => {
                           </div>
                         </div>
 
-                        <div className="h-2 w-full rounded-full bg-border/50 overflow-hidden">
+                        <div className="h-2.5 w-full rounded-full bg-black/40 overflow-hidden p-0.5 border border-white/10">
                           <div
                             className={`h-full rounded-full transition-all duration-500 ease-out ${barBg}`}
                             style={{ width: `${percentClamped}%` }}
@@ -340,17 +369,20 @@ const Dashboard = () => {
           </div>
 
           {/* Recent Transactions Section */}
-          <div className="p-6 rounded-lg bg-surface border border-border shadow-2xs">
-            <div className="flex items-center justify-between mb-6">
+          <div className="p-6 rounded-2xl glass-surface border border-white/10 shadow-xl">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
-                <h3 className="font-fraunces text-lg font-medium text-ink">Recent Ledger Activity</h3>
+                <h3 className="font-fraunces text-xl font-medium text-white">Recent Ledger Activity</h3>
                 <p className="text-xs text-ink-muted font-sans">Most recent financial transactions recorded</p>
               </div>
-              <Link
-                to="/transactions"
-                className="bg-brand hover:bg-brand-light text-white text-xs font-medium px-4 py-2 rounded-md shadow-2xs transition-colors duration-200"
-              >
-                + Log / View All Ledger
+              <Link to="/transactions">
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="glass-btn text-white text-xs font-medium px-4 py-2.5 rounded-xl shadow-md flex items-center gap-2"
+                >
+                  + Log / View All Ledger
+                </motion.button>
               </Link>
             </div>
 
@@ -361,37 +393,37 @@ const Dashboard = () => {
                 description="Your initial checking or savings accounts are seeded. Log your first salary deposit or expense entry to populate this table."
               />
             ) : (
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto rounded-xl border border-white/10">
                 <table className="w-full text-left border-collapse text-sm">
                   <thead>
-                    <tr className="border-b border-border text-[11px] font-mono tracking-wider uppercase text-ink-muted bg-canvas/40">
-                      <th className="py-3 px-3">Date</th>
-                      <th className="py-3 px-3">Account</th>
-                      <th className="py-3 px-3">Category</th>
-                      <th className="py-3 px-3">Note</th>
-                      <th className="py-3 px-3 text-right">Amount</th>
+                    <tr className="border-b border-white/10 text-[11px] font-mono tracking-wider uppercase text-ink-muted bg-white/5">
+                      <th className="py-3.5 px-4">Date</th>
+                      <th className="py-3.5 px-4">Account</th>
+                      <th className="py-3.5 px-4">Category</th>
+                      <th className="py-3.5 px-4">Note</th>
+                      <th className="py-3.5 px-4 text-right">Amount</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-border/60">
+                  <tbody className="divide-y divide-white/5">
                     {data.recentTransactions.map((tx) => (
-                      <tr key={tx.id} className="hover:bg-canvas/50 transition-colors duration-150">
-                        <td className="py-3 px-3 font-mono text-xs text-ink-muted whitespace-nowrap">
+                      <tr key={tx.id} className="hover:bg-white/5 transition-colors duration-150">
+                        <td className="py-3.5 px-4 font-mono text-xs text-ink-muted whitespace-nowrap">
                           {new Date(tx.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit' })}
                         </td>
-                        <td className="py-3 px-3 font-medium text-ink text-xs">
+                        <td className="py-3.5 px-4 font-medium text-white text-xs">
                           {tx.account?.name || 'Account'}
                         </td>
-                        <td className="py-3 px-3 text-xs">
-                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-canvas border border-border text-ink font-medium text-[11px]">
-                            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: tx.category?.color || '#5B6158' }} />
+                        <td className="py-3.5 px-4 text-xs">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-white font-medium text-[11px]">
+                            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: tx.category?.color || '#9CA3AF' }} />
                             {tx.category?.name || 'Uncategorized'}
                           </span>
                         </td>
-                        <td className="py-3 px-3 text-ink-muted text-xs truncate max-w-xs">
+                        <td className="py-3.5 px-4 text-ink-muted text-xs truncate max-w-xs">
                           {tx.note || '—'}
                         </td>
-                        <td className={`py-3 px-3 text-right font-mono tabular-nums text-xs font-semibold ${
-                          tx.type === 'INCOME' ? 'text-positive' : 'text-ink'
+                        <td className={`py-3.5 px-4 text-right font-mono tabular-nums text-xs font-semibold ${
+                          tx.type === 'INCOME' ? 'text-positive' : 'text-white'
                         }`}>
                           {tx.type === 'INCOME' ? '+' : '-'}${tx.amount.toFixed(2)}
                         </td>
