@@ -6,7 +6,7 @@
   "scripts": {
     "build": "cd frontend && npm install && npm run build",
     "test": "cd backend && npm test",
-    "vercel-build": "cd backend && npx prisma generate && cd ../frontend && npm install && npm run build"
+    "vercel-build": "cd frontend && npm install && npm run build"
   },
   "repository": {
     "type": "git",
